@@ -99,5 +99,6 @@ def getPoissonForMatch(home, away, alla_matcher):
     for x in range(6):
         homeProjectedPerGoal.append(poisson.pmf(x, projectedHomeGoals))
         awayProjectedPerGoal.append(poisson.pmf(x, projectedAwayGoals))
-
+    print("Home: " + str(projectedHomeGoals))
+    print("Away: " + str(projectedAwayGoals))
     return PoissonResult(homeProjectedPerGoal, awayProjectedPerGoal)
