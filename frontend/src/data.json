@@ -1,6 +1,17 @@
-{
-    "predictedScore" : "2-1",
-    "hometeam" : "Newcastle",
-    "awayteam" : "Sunderland"
-
-}
+[
+    {
+        "predictedScore": "2-1",
+        "hometeam": "Newcastle",
+        "awayteam": "Sunderland"
+    },
+    {
+        "predictedScore": "2-2",
+        "hometeam": "Arsaenal",
+        "awayteam": "Bolton"
+    },
+    {
+        "predictedScore": "7-5",
+        "hometeam": "Fulham",
+        "awayteam": "Finham"
+    }
+]
