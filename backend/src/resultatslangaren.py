@@ -55,13 +55,13 @@ monthDict = {
   "Dec": 12,
 }
 ligor = {
-    "PL_2020/21": "data/england/1-premierleague.txt",
-    "PL_2019/20": "data/england/1-premierleague_20192020.txt",
-    "PL_2015/16": "data/england/1-premierleague_20152016.txt",
-    "Championship_2020/21": "data/england/2-championship.txt",
-    "Allsvenskan_2020": "data/sverige/1-allsvenskan.txt",
-    "Superettan_2020" : "data/sverige/2-superettan.txt",
-    "CL_20192020": "data/championsleague/cl_20192020.txt"
+    "PL_2020/21": "backend/src/data/england/1-premierleague.txt",
+    "PL_2019/20": "backend/src/data/england/1-premierleague_20192020.txt",
+    "PL_2015/16": "backend/src/data/england/1-premierleague_20152016.txt",
+    "Championship_2020/21": "backend/src/data/england/2-championship.txt",
+    "Allsvenskan_2020": "backend/src/data/sverige/1-allsvenskan.txt",
+    "Superettan_2020" : "backend/src/data/sverige/2-superettan.txt",
+    "CL_20192020": "backend/src/data/championsleague/cl_20192020.txt"
 }
 
 def matcherPL():    
