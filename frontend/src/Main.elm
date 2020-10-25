@@ -3,7 +3,7 @@ module Main exposing (..)
 import Browser
 import Debug exposing (log)
 import Dict exposing (Dict)
-import Html exposing (Attribute, Html, button, div, header, img, input, li, span, text, ul)
+import Html exposing (Attribute, Html, button, div, header, img, input, li, p, span, text, ul)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (request)
@@ -23,10 +23,11 @@ main =
 -- MODEL
 
 
-type alias Model =
-    { request : Dict Int AnalyzeRequest
-    , result : Maybe (List AnalyzeResult)
-    }
+type Model
+    = InputMatches (Dict Int AnalyzeRequest)
+    | Loading
+    | Success (List AnalyzeResult)
+    | Failure
 
 
 type alias AnalyzeRequest =
@@ -44,7 +45,7 @@ type alias AnalyzeResult =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Model
+    ( InputMatches
         (Dict.fromList
             [ ( 0, AnalyzeRequest "" "" )
             , ( 1, AnalyzeRequest "" "" )
@@ -62,7 +63,6 @@ init _ =
             , ( 13, AnalyzeRequest "" "" )
             ]
         )
-        Nothing
     , Cmd.none
     )
 
@@ -74,61 +74,74 @@ init _ =
 type Msg
     = Changehome Int String
     | Changeaway Int String
+    | AddMatch
     | SendAnalyzeRequest
-    | AddAnalyzeRequest
     | GotAnalyzeResult (Result Http.Error (List AnalyzeResult))
+
+
+
+{- 
+| GotAnalyzeResult (Result Http.Error (List AnalyzeResult))
+-}
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        AddAnalyzeRequest ->
-            let
-                itemsAdded =
-                    Dict.insert (Dict.size model.request) (AnalyzeRequest "" "") model.request
-            in
-            ( { model | request = itemsAdded }, Cmd.none )
+    case msg of ->
+        GotAnalyzeResult result
+    case model of
+        Success items ->
+            (Success , Cmd.none)
+        Failure ->
+            (Failure, Cmd.none)
+        Loading ->
+            case msg of
+                GotAnalyzeResult result ->
+                    case result of
+                        Ok received ->
+                            (Success received, Cmd.none)
+                        Err _ ->
+                            (Failure, Cmd.none)
+        InputMatches matches ->
+            case msg of
+                Changehome index newContent ->
+                    let
+                        updateChange =
+                            Maybe.map (\data -> { data | home = newContent })
 
-        Changehome index newContent ->
-            let
-                updateChange =
-                    Maybe.map (\data -> { data | home = newContent })
+                        changesUpdated =
+                            Dict.update index
+                                updateChange
+                                matches
+                    in
+                    ( InputMatches changesUpdated, Cmd.none )
 
-                changesUpdated =
-                    Dict.update index
-                        updateChange
-                        model.request
-            in
-            ( { model | request = changesUpdated }, Cmd.none )
+                Changeaway index newContent ->
+                    let
+                        updateChange =
+                            Maybe.map (\data -> { data | away = newContent })
 
-        Changeaway index newContent ->
-            let
-                updateChange =
-                    Maybe.map (\data -> { data | away = newContent })
+                        changesUpdated =
+                            Dict.update index
+                                updateChange
+                                matches
+                    in
+                    ( InputMatches changesUpdated, Cmd.none )
 
-                changesUpdated =
-                    Dict.update index
-                        updateChange
-                        model.request
-            in
-            ( { model | request = changesUpdated }, Cmd.none )
-
-        SendAnalyzeRequest ->
-            ( model
-            , Http.get
-                { url = "./data.json"
-                , expect = Http.expectJson GotAnalyzeResult analyzeListDecoder
-                }
-            )
-
-        GotAnalyzeResult request ->
-            case request of
-                Ok re ->
-                    ( { model | result = Just re }, Cmd.none )
-
-                Err err ->
-                    ( model, Cmd.none )
-
+                AddMatch ->
+                    let
+                        itemsAdded =
+                            Dict.insert (Dict.size matches) (AnalyzeRequest "" "") matches
+                    in
+                    ( InputMatches itemsAdded, Cmd.none )
+                SendAnalyzeRequest ->
+                    ( Loading
+                    , Http.get
+                        { url = "./data.json"
+                        , expect = Http.expectJson GotAnalyzeResult analyzeListDecoder
+                        }
+                    )
+            
 
 
 -- SUBSCRIPTIONS
@@ -145,15 +158,17 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ header [] [ img [ src "./assets/logo.png" ] [] ]
-        , div []
-            [ div [] (List.map inputView (Dict.toList model.request))
-            , button [ onClick AddAnalyzeRequest ] [ text "+" ]
-            , button [ onClick SendAnalyzeRequest ] [ text "Send it!" ]
-            , analyzeView model
-            ]
-        ]
+    case model of
+        InputMatches matches ->
+            div []
+                [ header [] [ img [ src "./assets/logo.png" ] [] ]
+                , div []
+                    [ div [] (List.map inputView (Dict.toList matches))
+                    , button [ onClick AddMatch ] [ text "+" ]
+
+                    {- , button [ onClick SendAnalyzeRequest ] [ text "Send it!" ] -}
+                    ]
+                ]
 
 
 inputView : ( Int, AnalyzeRequest ) -> Html Msg
@@ -161,29 +176,6 @@ inputView ( key, val ) =
     li []
         [ input [ placeholder "Hometeam", value val.home, onInput (Changehome key) ] []
         , input [ placeholder "Awayteam", value val.away, onInput (Changeaway key) ] []
-        ]
-
-
-analyzeView : Model -> Html Msg
-analyzeView model =
-    case model.result of
-        Maybe.Just res ->
-            ul []
-                (List.map (\l -> analyzeItemView l) res)
-
-        Nothing ->
-            span [] []
-
-
-analyzeItemView : AnalyzeResult -> Html Msg
-analyzeItemView res =
-    li []
-        [ div []
-            [ text res.predictedScore
-            ]
-        , text res.hometeam
-        , text "-"
-        , text res.awayteam
         ]
 
 
