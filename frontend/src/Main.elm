@@ -87,60 +87,73 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of ->
-        GotAnalyzeResult result
-    case model of
-        Success items ->
-            (Success , Cmd.none)
-        Failure ->
-            (Failure, Cmd.none)
-        Loading ->
-            case msg of
-                GotAnalyzeResult result ->
-                    case result of
-                        Ok received ->
-                            (Success received, Cmd.none)
-                        Err _ ->
-                            (Failure, Cmd.none)
+  case msg of
+    Changehome index newContent ->
+      case model of
         InputMatches matches ->
-            case msg of
-                Changehome index newContent ->
-                    let
-                        updateChange =
-                            Maybe.map (\data -> { data | home = newContent })
+          let
+              updateChange =
+                  Maybe.map (\data -> { data | home = newContent })
 
-                        changesUpdated =
-                            Dict.update index
-                                updateChange
-                                matches
-                    in
-                    ( InputMatches changesUpdated, Cmd.none )
+              changesUpdated =
+                  Dict.update index
+                      updateChange
+                      matches
+          in
+          ( InputMatches changesUpdated, Cmd.none )
+        _ ->
+          (model, Cmd.none) 
 
-                Changeaway index newContent ->
-                    let
-                        updateChange =
-                            Maybe.map (\data -> { data | away = newContent })
+    Changeaway index newContent ->
+      case model of
+        InputMatches matches ->
+          let
+            updateChange =
+              Maybe.map (\data -> { data | away = newContent })
 
-                        changesUpdated =
-                            Dict.update index
-                                updateChange
-                                matches
-                    in
-                    ( InputMatches changesUpdated, Cmd.none )
+            changesUpdated =
+                  Dict.update index
+                      updateChange
+                      matches
+          in
+          ( InputMatches changesUpdated, Cmd.none )
+        _ ->
+          (model, Cmd.none) 
 
-                AddMatch ->
-                    let
-                        itemsAdded =
-                            Dict.insert (Dict.size matches) (AnalyzeRequest "" "") matches
-                    in
-                    ( InputMatches itemsAdded, Cmd.none )
-                SendAnalyzeRequest ->
-                    ( Loading
-                    , Http.get
-                        { url = "./data.json"
-                        , expect = Http.expectJson GotAnalyzeResult analyzeListDecoder
-                        }
-                    )
+    AddMatch ->
+      case model of
+        InputMatches matches ->
+          let
+              itemsAdded =
+                  Dict.insert (Dict.size matches) (AnalyzeRequest "" "") matches
+          in
+          ( InputMatches itemsAdded, Cmd.none )
+        _ ->
+          (model, Cmd.none) 
+
+    SendAnalyzeRequest ->
+      case model of
+        InputMatches matches ->
+          ( Loading
+          , Http.get
+              { url = "./data.json"
+              , expect = Http.expectJson GotAnalyzeResult analyzeListDecoder
+              }
+          )
+        _ ->
+          (model, Cmd.none) 
+
+
+    GotAnalyzeResult result ->
+      case model of
+        Loading ->
+          case result of
+              Ok received ->
+                  (Success received, Cmd.none)
+              Err _ ->
+                  (Failure, Cmd.none)
+        _ ->
+          (model, Cmd.none) 
             
 
 
@@ -165,11 +178,27 @@ view model =
                 , div []
                     [ div [] (List.map inputView (Dict.toList matches))
                     , button [ onClick AddMatch ] [ text "+" ]
-
-                    {- , button [ onClick SendAnalyzeRequest ] [ text "Send it!" ] -}
+                    , button [ onClick SendAnalyzeRequest ] [ text "Send it!" ]
                     ]
                 ]
+        Loading ->
+          text "Loading...!"
+        Success results->
+          ul []
+            (List.map (\l -> analyzeView l) results)
 
+        Failure ->
+          text "Something is wrong...!"
+
+
+analyzeView : AnalyzeResult -> Html Msg
+analyzeView res =
+  li [] [
+    div [] [
+      text res.predictedScore]
+    , text res.hometeam
+    , text "-"
+    , text res.awayteam]
 
 inputView : ( Int, AnalyzeRequest ) -> Html Msg
 inputView ( key, val ) =
