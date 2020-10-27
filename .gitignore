@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Elm-stuff
+frontend/elm-stuff/*
+frontend/elm-stuff
