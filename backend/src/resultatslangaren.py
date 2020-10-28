@@ -1,78 +1,29 @@
 import csv
-from dataclasses import dataclass
 import re
 import datetime
+import englandRepository
+import sverigeRepository
 
-
-@dataclass
-class Match:
-    date: datetime.date
-    homeTeam: str
-    awayTeam: str
-    fullTime: tuple
-    halfTime: tuple
-    liga: str
-
-    def gjordaMal(self, lag) -> int:
-        if lag in self.homeTeam:
-            return self.fullTime[0]
-        else:
-            return self.fullTime[1]
-
-    def inslapptaMal(self, lag) -> int:
-        if lag in self.homeTeam:
-            return self.fullTime[1]
-        else:
-            return self.fullTime[0]
-
-    def resultatForLag(self, lag) -> str:
-        homescore, awayscore = self.fullTime
-        if homescore == awayscore:
-            return "D"
-        elif homescore > awayscore:
-            if lag in self.homeTeam:
-                return 'W'
-            else:
-                return "L"
-        else:
-            if lag in self.homeTeam:
-                return 'L'
-            else:
-                return "W"
-
-monthDict = {
-  "Jan": 1,
-  "Feb": 2,
-  "Mar": 3,
-  "Apr": 4,
-  "May": 5,
-  "Jun": 6,
-  "Jul": 7,
-  "Aug": 8,
-  "Sep": 9,
-  "Oct": 10,
-  "Nov": 11,
-  "Dec": 12,
-}
 ligor = {
-    "PL_2020/21": "backend/src/data/england/1-premierleague.txt",
     "PL_2019/20": "backend/src/data/england/1-premierleague_20192020.txt",
     "PL_2015/16": "backend/src/data/england/1-premierleague_20152016.txt",
-    "Championship_2020/21": "backend/src/data/england/2-championship.txt",
-    "Allsvenskan_2020": "backend/src/data/sverige/1-allsvenskan.txt",
-    "Superettan_2020" : "backend/src/data/sverige/2-superettan.txt",
     "CL_20192020": "backend/src/data/championsleague/cl_20192020.txt"
 }
 
 def matcherPL():    
-    return allaMatcherForSasong("PL_2019/20") + allaMatcherTillDatum(datetime.date.today().year, datetime.date.today().month, datetime.date.today().day, "PL_2020/21")
+    return englandRepository.fetch_PL_2020_21()
 
-def matcherCL():    
-    return allaMatcherForSasong("CL_20192020")
+def matcherCh():    
+    return englandRepository.fetch_Ch_2020_21()
 
 def matcherCH():    
     return allaMatcherForSasong("Championship_2020/21")
 
+def matcherAllsvenskan():
+    return sverigeRepository.parseAllsvenskan2020()
+
+def matcherSuperettan():
+    return sverigeRepository.parseSuperettan2020()
 
 def parseFile(file, ligatitel):
     f = open(file, encoding='utf8')
