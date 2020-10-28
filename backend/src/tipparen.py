@@ -19,7 +19,7 @@ def tippaMatch(hemma, borta, liga):
     if liga == "CL":
         matcher = resultatslangaren.matcherCL()
     if liga == "Ch":
-        matcher = resultatslangaren.matcherCH()
+        matcher = resultatslangaren.matcherCh()
     try:
         result = poissondistribution.getPoissonForMatch(hemma, borta, matcher)
         print(hemma, "-", borta, ": ", result.getMostProbableScore())

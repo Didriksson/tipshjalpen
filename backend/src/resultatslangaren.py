@@ -16,9 +16,6 @@ def matcherPL():
 def matcherCh():    
     return englandRepository.fetch_Ch_2020_21()
 
-def matcherCH():    
-    return allaMatcherForSasong("Championship_2020/21")
-
 def matcherAllsvenskan():
     return sverigeRepository.parseAllsvenskan2020()
 
