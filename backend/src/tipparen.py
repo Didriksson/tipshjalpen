@@ -25,7 +25,7 @@ def tippaMatch(hemma, borta, liga):
         print(hemma, "-", borta, ": ", result.getMostProbableScore())
     except:
         e = sys.exc_info()[0]
-        print("Fångat fel vid resultat för match", hemma, "-", borta, "antal matcher: ", len(matcher), "fel", e)
+        print("Fångat fel vid resultat för match", hemma, "-", borta, "antal matcher: ", len(matcher), ",fel fångat", e)
 
 tippaMatch("Manchester United", "Chelsea", "PL")
 tippaMatch("Liverpool","Sheffield U", "PL")
