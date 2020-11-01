@@ -7,7 +7,7 @@ import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events exposing (..)
-import Element.Font as Font exposing (alignLeft)
+import Element.Font as Font
 import Element.Input as Input
 import Html exposing (Attribute, Html, button, div, header, img, input, li, p, span, ul)
 import Html.Attributes exposing (placeholder, value)
@@ -39,8 +39,8 @@ type Model
 
 type alias AnalyzeInput =
     { matches : Dict Int MatchInputBox
-    , helgarderingar : String
-    , halvgarderingar : String
+    , helgarderingar : Maybe Int
+    , halvgarderingar : Maybe Int
     }
 
 
@@ -60,8 +60,8 @@ type alias AnalyzeResult =
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( InputRequestState
-        (AnalyzeInput
-            (Dict.fromList
+        { matches =
+            Dict.fromList
                 [ ( 0, MatchInputBox "" "" )
                 , ( 1, MatchInputBox "" "" )
                 , ( 2, MatchInputBox "" "" )
@@ -76,10 +76,9 @@ init _ =
                 , ( 11, MatchInputBox "" "" )
                 , ( 12, MatchInputBox "" "" )
                 ]
-            )
-            "0"
-            "0"
-        )
+        , helgarderingar = Just 0
+        , halvgarderingar = Just 0
+        }
     , Cmd.none
     )
 
@@ -96,6 +95,37 @@ type Msg
     | AddMatch
     | SendAnalyzeRequest
     | GotAnalyzeResult (Result Http.Error (List AnalyzeResult))
+
+
+
+-- helpers
+
+
+{-| Returnerar det första värdet i listan som inte är Nothing.
+Om alla värden är nothing returneras Nothing.
+-}
+maybeOneOf : List (Maybe a) -> Maybe a
+maybeOneOf maybes =
+    maybes
+        |> List.filterMap identity
+        |> List.head
+
+
+{-| Validerar att en inmatat gardering är ett giltigt värde.
+Giltiga värden är heltal mellan 1 och 99.
+-}
+valideraGarderingInput : String -> Maybe Int
+valideraGarderingInput input =
+    case String.toInt input of
+        Nothing ->
+            Nothing
+
+        Just n ->
+            if n < 100 && n >= 0 then
+                Just n
+
+            else
+                Nothing
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -135,55 +165,40 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
-        Changehalvgarderingar newContent ->
+        Changehalvgarderingar inputHalvgarderingar ->
             case model of
-                InputRequestState inputState ->
+                InputRequestState inputModel ->
                     let
-                        regexNotDigit =
-                            Maybe.withDefault Regex.never <|
-                                Regex.fromString "[^0-9]"
+                        newHalvgarderingar =
+                            if inputHalvgarderingar == "" then
+                                Nothing
 
-                        containsNonDigit =
-                            Regex.contains regexNotDigit newContent
+                            else
+                                maybeOneOf
+                                    [ valideraGarderingInput inputHalvgarderingar
+                                    , inputModel.halvgarderingar
+                                    ]
                     in
-                    if newContent == "" then
-                        ( InputRequestState { inputState | halvgarderingar = newContent }, Cmd.none )
-
-                    else if containsNonDigit then
-                        ( model, Cmd.none )
-
-                    else if ((String.toInt newContent |> Maybe.withDefault 0) + (String.toInt inputState.helgarderingar |> Maybe.withDefault 0)) > Dict.size inputState.matches then
-                        ( model, Cmd.none )
-
-                    else
-                        ( InputRequestState { inputState | halvgarderingar = newContent }, Cmd.none )
-
+                    ( InputRequestState { inputModel | halvgarderingar = newHalvgarderingar }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
-        Changehelgarderingar newContent ->
+        Changehelgarderingar inputHelgarderingar ->
             case model of
-                InputRequestState inputState ->
+                InputRequestState inputModel ->
                     let
-                        regexNotDigit =
-                            Maybe.withDefault Regex.never <|
-                                Regex.fromString "[^0-9]"
+                        newHelgarderingar =
+                            if inputHelgarderingar == "" then
+                                Nothing
 
-                        containsNonDigit =
-                            Regex.contains regexNotDigit newContent
+                            else
+                                maybeOneOf
+                                    [ valideraGarderingInput inputHelgarderingar
+                                    , inputModel.helgarderingar
+                                    ]
                     in
-                    if newContent == "" then
-                        ( InputRequestState { inputState | helgarderingar = newContent }, Cmd.none )
-
-                    else if containsNonDigit then
-                        ( model, Cmd.none )
-
-                    else if ((String.toInt newContent |> Maybe.withDefault 0) + (String.toInt inputState.halvgarderingar |> Maybe.withDefault 0)) > Dict.size inputState.matches then
-                        ( model, Cmd.none )
-
-                    else
-                        ( InputRequestState { inputState | helgarderingar = newContent }, Cmd.none )
+                    ( InputRequestState { inputModel | helgarderingar = newHelgarderingar }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
@@ -243,13 +258,18 @@ subscriptions model =
 header : Element msg
 header =
     el
-        [ height <| fillPortion 1
+        [ height (px 100)
         , width fill
-        , Background.color <| rgb255 92 99 118
-        , Font.color <| rgb255 255 255 255
+        , Background.color <| rgb255 150 99 118
         ]
     <|
-        text "Tipshjälpen"
+        el
+            [ centerX
+            , centerY
+            , Font.color <| rgb255 255 255 255
+            , Font.size 50
+            ]
+            (text "Tipshjälpen")
 
 
 inputMatchesView : AnalyzeInput -> Element Msg
@@ -290,7 +310,6 @@ inputView ( key, val ) =
         [ el [ padding 5, width (px 20) ] <| Element.text (String.fromInt (key + 1))
         , Input.text
             [ centerX
-            , centerY
             ]
             { text = val.home
             , onChange = Changehome key
@@ -319,23 +338,45 @@ inputView ( key, val ) =
 
 mainView : AnalyzeInput -> Element Msg
 mainView input =
-    row [spacing 20, height fill, padding 10]
+    row [ spacing 20, height fill, width fill, padding 10 ]
         [ inputMatchesView input
-        , Input.text
-            [width shrink]
-            { text = input.helgarderingar
-            , onChange = Changehelgarderingar
-            , placeholder = Nothing
-            , label = Input.labelAbove [] (text "Helgarderingar")
-            }
-        , Input.text
-            [width shrink]
-            { text = input.halvgarderingar
-            , onChange = Changehalvgarderingar
-            , placeholder = Nothing
-            , label = Input.labelAbove [] (text "Halvgarderingar")
-            }
+        , column [ spacing 20, width fill, alignTop ]
+            [ garderingInputView "Helgarderingar" input.helgarderingar Changehelgarderingar
+            , garderingInputView "Halvgarderingar" input.halvgarderingar Changehalvgarderingar
+            , valideraGarderingView input
+            ]
         ]
+
+
+valideraGarderingView : AnalyzeInput -> Element msg
+valideraGarderingView input =
+    case ( input.halvgarderingar, input.helgarderingar ) of
+        ( Just halv, Just hel ) ->
+            if halv + hel > Dict.size input.matches then
+                paragraph [] [ text "Antal halv och helgarderingar kan inte överstiga antal matcher." ]
+
+            else
+                Element.none
+
+        ( _, _ ) ->
+            Element.none
+
+
+garderingInputView : String -> Maybe Int -> (String -> Msg) -> Element Msg
+garderingInputView label value toMsg =
+    Input.text
+        [ Font.size 40
+        , centerX
+        , Font.bold
+        , Font.center
+        , width (px 100)
+        , Element.Events.onLoseFocus <| toMsg (Maybe.map String.fromInt value |> Maybe.withDefault "0")
+        ]
+        { text = Maybe.map String.fromInt value |> Maybe.withDefault ""
+        , onChange = toMsg
+        , placeholder = Nothing
+        , label = Input.labelAbove [ centerX, Font.size 20 ] (text label)
+        }
 
 
 view : Model -> Html Msg
