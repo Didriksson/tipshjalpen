@@ -6166,11 +6166,30 @@ var $author$project$Main$Kupong = F2(
 		return {name: name, rader: rader};
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
-var $author$project$Main$KupongRad = F5(
-	function (home, away, liga, svenskaFolket, odds) {
-		return {away: away, home: home, liga: liga, odds: odds, svenskaFolket: svenskaFolket};
+var $author$project$Main$KupongRad = F6(
+	function (home, away, liga, svenskaFolket, odds, analys) {
+		return {analys: analys, away: away, home: home, liga: liga, odds: odds, svenskaFolket: svenskaFolket};
 	});
-var $elm$json$Json$Decode$map5 = _Json_map5;
+var $author$project$Main$Analys = function (predictedScore) {
+	return {predictedScore: predictedScore};
+};
+var $author$project$Main$Score = F2(
+	function (hemmalag, bortalag) {
+		return {bortalag: bortalag, hemmalag: hemmalag};
+	});
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Main$analysDecoder = A2(
+	$elm$json$Json$Decode$map,
+	$author$project$Main$Analys,
+	A2(
+		$elm$json$Json$Decode$field,
+		'predictedScore',
+		A3(
+			$elm$json$Json$Decode$map2,
+			$author$project$Main$Score,
+			A2($elm$json$Json$Decode$field, 'hemmalag', $elm$json$Json$Decode$int),
+			A2($elm$json$Json$Decode$field, 'bortalag', $elm$json$Json$Decode$int))));
+var $elm$json$Json$Decode$map6 = _Json_map6;
 var $author$project$Main$MatchInfoHallare = F3(
 	function (hemmalag, kryss, bortalag) {
 		return {bortalag: bortalag, hemmalag: hemmalag, kryss: kryss};
@@ -6183,14 +6202,15 @@ var $author$project$Main$matchInfoHallareDecoder = A4(
 	A2($elm$json$Json$Decode$field, 'hemmalag', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'kryss', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'bortalag', $elm$json$Json$Decode$string));
-var $author$project$Main$kupongRadDecoder = A6(
-	$elm$json$Json$Decode$map5,
+var $author$project$Main$kupongRadDecoder = A7(
+	$elm$json$Json$Decode$map6,
 	$author$project$Main$KupongRad,
 	A2($elm$json$Json$Decode$field, 'hemmalag', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'bortalag', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'liga', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'svenskaFolket', $author$project$Main$matchInfoHallareDecoder),
-	A2($elm$json$Json$Decode$field, 'odds', $author$project$Main$matchInfoHallareDecoder));
+	A2($elm$json$Json$Decode$field, 'odds', $author$project$Main$matchInfoHallareDecoder),
+	A2($elm$json$Json$Decode$field, 'analys', $author$project$Main$analysDecoder));
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Main$kupongDecoder = A3(
 	$elm$json$Json$Decode$map2,
@@ -6215,185 +6235,25 @@ var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$Failure = {$: 'Failure'};
-var $author$project$Main$InputRequestState = function (a) {
-	return {$: 'InputRequestState', a: a};
-};
-var $author$project$Main$MatchInputBox = F2(
-	function (home, away) {
-		return {away: away, home: home};
-	});
 var $author$project$Main$Success = function (a) {
 	return {$: 'Success', a: a};
 };
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
-var $author$project$Main$maybeOneOf = function (maybes) {
-	return $elm$core$List$head(
-		A2($elm$core$List$filterMap, $elm$core$Basics$identity, maybes));
-};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$Dict$sizeHelp = F2(
-	function (n, dict) {
-		sizeHelp:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return n;
-			} else {
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$n = A2($elm$core$Dict$sizeHelp, n + 1, right),
-					$temp$dict = left;
-				n = $temp$n;
-				dict = $temp$dict;
-				continue sizeHelp;
-			}
-		}
-	});
-var $elm$core$Dict$size = function (dict) {
-	return A2($elm$core$Dict$sizeHelp, 0, dict);
-};
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Main$valideraGarderingInput = function (input) {
-	var _v0 = $elm$core$String$toInt(input);
-	if (_v0.$ === 'Nothing') {
-		return $elm$core$Maybe$Nothing;
-	} else {
-		var n = _v0.a;
-		return ((n < 100) && (n >= 0)) ? $elm$core$Maybe$Just(n) : $elm$core$Maybe$Nothing;
-	}
-};
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'Changehome':
-				var index = msg.a;
-				var newContent = msg.b;
-				if (model.$ === 'InputRequestState') {
-					var inputstate = model.a;
-					var updateChange = $elm$core$Maybe$map(
-						function (data) {
-							return _Utils_update(
-								data,
-								{home: newContent});
-						});
-					var changesUpdated = A3($elm$core$Dict$update, index, updateChange, inputstate.matches);
-					return _Utils_Tuple2(
-						$author$project$Main$InputRequestState(
-							_Utils_update(
-								inputstate,
-								{matches: changesUpdated})),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 'Changeaway':
-				var index = msg.a;
-				var newContent = msg.b;
-				if (model.$ === 'InputRequestState') {
-					var inputstate = model.a;
-					var updateChange = $elm$core$Maybe$map(
-						function (data) {
-							return _Utils_update(
-								data,
-								{away: newContent});
-						});
-					var changesUpdated = A3($elm$core$Dict$update, index, updateChange, inputstate.matches);
-					return _Utils_Tuple2(
-						$author$project$Main$InputRequestState(
-							_Utils_update(
-								inputstate,
-								{matches: changesUpdated})),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 'Changehalvgarderingar':
-				var inputHalvgarderingar = msg.a;
-				if (model.$ === 'InputRequestState') {
-					var inputModel = model.a;
-					var newHalvgarderingar = (inputHalvgarderingar === '') ? $elm$core$Maybe$Nothing : $author$project$Main$maybeOneOf(
-						_List_fromArray(
-							[
-								$author$project$Main$valideraGarderingInput(inputHalvgarderingar),
-								inputModel.halvgarderingar
-							]));
-					return _Utils_Tuple2(
-						$author$project$Main$InputRequestState(
-							_Utils_update(
-								inputModel,
-								{halvgarderingar: newHalvgarderingar})),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 'Changehelgarderingar':
-				var inputHelgarderingar = msg.a;
-				if (model.$ === 'InputRequestState') {
-					var inputModel = model.a;
-					var newHelgarderingar = (inputHelgarderingar === '') ? $elm$core$Maybe$Nothing : $author$project$Main$maybeOneOf(
-						_List_fromArray(
-							[
-								$author$project$Main$valideraGarderingInput(inputHelgarderingar),
-								inputModel.helgarderingar
-							]));
-					return _Utils_Tuple2(
-						$author$project$Main$InputRequestState(
-							_Utils_update(
-								inputModel,
-								{helgarderingar: newHelgarderingar})),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 'AddMatch':
-				if (model.$ === 'InputRequestState') {
-					var inputstate = model.a;
-					var itemsAdded = A3(
-						$elm$core$Dict$insert,
-						$elm$core$Dict$size(inputstate.matches),
-						A2($author$project$Main$MatchInputBox, '', ''),
-						inputstate.matches);
-					return _Utils_Tuple2(
-						$author$project$Main$InputRequestState(
-							_Utils_update(
-								inputstate,
-								{matches: itemsAdded})),
-						$elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			default:
-				var result = msg.a;
-				if (model.$ === 'Loading') {
-					if (result.$ === 'Ok') {
-						var received = result.a;
-						return _Utils_Tuple2(
-							$author$project$Main$Success(received),
-							$elm$core$Platform$Cmd$none);
-					} else {
-						return _Utils_Tuple2($author$project$Main$Failure, $elm$core$Platform$Cmd$none);
-					}
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
+		var result = msg.a;
+		if (model.$ === 'Loading') {
+			if (result.$ === 'Ok') {
+				var received = result.a;
+				return _Utils_Tuple2(
+					$author$project$Main$Success(received),
+					$elm$core$Platform$Cmd$none);
+			} else {
+				return _Utils_Tuple2($author$project$Main$Failure, $elm$core$Platform$Cmd$none);
+			}
+		} else {
+			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
 	});
 var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
@@ -6800,6 +6660,16 @@ var $mdgriffith$elm_ui$Internal$Model$formatBoxShadow = function (shadow) {
 					$mdgriffith$elm_ui$Internal$Model$formatColor(shadow.color))
 				])));
 };
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$core$Tuple$mapFirst = F2(
 	function (func, _v0) {
 		var x = _v0.a;
@@ -10940,6 +10810,7 @@ var $mdgriffith$elm_ui$Internal$Model$renderWidth = function (w) {
 	}
 };
 var $mdgriffith$elm_ui$Internal$Flag$borderWidth = $mdgriffith$elm_ui$Internal$Flag$flag(27);
+var $elm$core$Basics$ge = _Utils_ge;
 var $mdgriffith$elm_ui$Internal$Model$skippable = F2(
 	function (flag, style) {
 		if (_Utils_eq(flag, $mdgriffith$elm_ui$Internal$Flag$borderWidth)) {
@@ -12464,12 +12335,14 @@ var $author$project$Main$kupongRadView = function (rad) {
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[$mdgriffith$elm_ui$Element$alignRight, $mdgriffith$elm_ui$Element$alignTop]),
-								$mdgriffith$elm_ui$Element$text('2')),
+								$mdgriffith$elm_ui$Element$text(
+									$elm$core$String$fromInt(rad.analys.predictedScore.hemmalag))),
 								A2(
 								$mdgriffith$elm_ui$Element$el,
 								_List_fromArray(
 									[$mdgriffith$elm_ui$Element$alignRight, $mdgriffith$elm_ui$Element$alignBottom]),
-								$mdgriffith$elm_ui$Element$text('1'))
+								$mdgriffith$elm_ui$Element$text(
+									$elm$core$String$fromInt(rad.analys.predictedScore.bortalag)))
 							]))
 					]))
 			]));
@@ -12599,20 +12472,6 @@ var $author$project$Main$mainView = function (input) {
 };
 var $author$project$Main$view = function (model) {
 	switch (model.$) {
-		case 'InputRequestState':
-			var matches = model.a;
-			return A2(
-				$mdgriffith$elm_ui$Element$layout,
-				_List_Nil,
-				A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-						]),
-					_List_fromArray(
-						[$author$project$Main$header])));
 		case 'Loading':
 			return A2(
 				$mdgriffith$elm_ui$Element$layout,

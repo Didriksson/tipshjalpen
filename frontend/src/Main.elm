@@ -16,6 +16,7 @@ import Http exposing (request)
 import Json.Decode as D
 import Maybe exposing (Maybe)
 import Regex
+import Json.Decode exposing (int)
 
 
 
@@ -32,21 +33,19 @@ main =
 
 type Model
     = Loading
-    | InputRequestState AnalyzeInput
     | Success Kupong
     | Failure
 
 
-type alias AnalyzeInput =
-    { matches : Dict Int MatchInputBox
-    , helgarderingar : Maybe Int
-    , halvgarderingar : Maybe Int
+type alias Score =
+    {
+      hemmalag : Int
+     , bortalag: Int
     }
 
-
-type alias MatchInputBox =
-    { home : String
-    , away : String
+type alias Analys =
+    { 
+        predictedScore : Score
     }
 
 type alias KupongRad = 
@@ -56,17 +55,13 @@ type alias KupongRad =
         ,liga : String
         ,svenskaFolket : MatchInfoHallare
         ,odds : MatchInfoHallare
+        ,analys : Analys
 
     }
 type alias Kupong =
     {
          name : String
         ,rader : List KupongRad
-    }
-
-type alias AnalyzeResult =
-    { 
-        predictedScore : (Int, Int)
     }
 
 type alias MatchInfoHallare =   
@@ -90,16 +85,10 @@ init _ =
 
 
 type Msg
-    = Changehome Int String
-    | Changeaway Int String
-    | Changehelgarderingar String
-    | Changehalvgarderingar String
-    | AddMatch
-    | GotOppenKupong (Result Http.Error Kupong)
+    =  GotOppenKupong (Result Http.Error Kupong)
 
 
 
--- helpers
 
 
 {-| Returnerar det första värdet i listan som inte är Nothing.
@@ -132,90 +121,6 @@ valideraGarderingInput input =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Changehome index newContent ->
-            case model of
-                InputRequestState inputstate ->
-                    let
-                        updateChange =
-                            Maybe.map (\data -> { data | home = newContent })
-
-                        changesUpdated =
-                            Dict.update index
-                                updateChange
-                                inputstate.matches
-                    in
-                    ( InputRequestState { inputstate | matches = changesUpdated }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        Changeaway index newContent ->
-            case model of
-                InputRequestState inputstate ->
-                    let
-                        updateChange =
-                            Maybe.map (\data -> { data | away = newContent })
-
-                        changesUpdated =
-                            Dict.update index
-                                updateChange
-                                inputstate.matches
-                    in
-                    ( InputRequestState { inputstate | matches = changesUpdated }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        Changehalvgarderingar inputHalvgarderingar ->
-            case model of
-                InputRequestState inputModel ->
-                    let
-                        newHalvgarderingar =
-                            if inputHalvgarderingar == "" then
-                                Nothing
-
-                            else
-                                maybeOneOf
-                                    [ valideraGarderingInput inputHalvgarderingar
-                                    , inputModel.halvgarderingar
-                                    ]
-                    in
-                    ( InputRequestState { inputModel | halvgarderingar = newHalvgarderingar }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        Changehelgarderingar inputHelgarderingar ->
-            case model of
-                InputRequestState inputModel ->
-                    let
-                        newHelgarderingar =
-                            if inputHelgarderingar == "" then
-                                Nothing
-
-                            else
-                                maybeOneOf
-                                    [ valideraGarderingInput inputHelgarderingar
-                                    , inputModel.helgarderingar
-                                    ]
-                    in
-                    ( InputRequestState { inputModel | helgarderingar = newHelgarderingar }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        AddMatch ->
-            case model of
-                InputRequestState inputstate ->
-                    let
-                        itemsAdded =
-                            Dict.insert (Dict.size inputstate.matches) (MatchInputBox "" "") inputstate.matches
-                    in
-                    ( InputRequestState { inputstate | matches = itemsAdded }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
-
         GotOppenKupong result ->
             case model of
                 Loading ->
@@ -293,8 +198,8 @@ kupongRadView rad =
                     el [] (text rad.odds.kryss),
                     el [] (text rad.odds.bortalag)]],
             column [height fill, width <| fillPortion 3] [ 
-                el [Element.alignRight, Element.alignTop] (text "2"), 
-                el [Element.alignRight, Element.alignBottom] (text "1")
+                el [Element.alignRight, Element.alignTop] (text (String.fromInt rad.analys.predictedScore.hemmalag)), 
+                el [Element.alignRight, Element.alignBottom] (text (String.fromInt rad.analys.predictedScore.bortalag))
             ]
         ]
     ]
@@ -310,47 +215,9 @@ mainView input =
         ]
 
 
-valideraGarderingView : AnalyzeInput -> Element msg
-valideraGarderingView input =
-    case ( input.halvgarderingar, input.helgarderingar ) of
-        ( Just halv, Just hel ) ->
-            if halv + hel > Dict.size input.matches then
-                paragraph [] [ text "Antal halv och helgarderingar kan inte överstiga antal matcher." ]
-
-            else
-                Element.none
-
-        ( _, _ ) ->
-            Element.none
-
-
-garderingInputView : String -> Maybe Int -> (String -> Msg) -> Element Msg
-garderingInputView label value toMsg =
-    Input.text
-        [ Font.size 40
-        , centerX
-        , Font.bold
-        , Font.center
-        , width (px 100)
-        , Element.Events.onLoseFocus <| toMsg (Maybe.map String.fromInt value |> Maybe.withDefault "0")
-        ]
-        { text = Maybe.map String.fromInt value |> Maybe.withDefault ""
-        , onChange = toMsg
-        , placeholder = Nothing
-        , label = Input.labelAbove [ centerX, Font.size 20 ] (text label)
-        }
-
-
 view : Model -> Html Msg
 view model =
     case model of
-        InputRequestState matches ->
-            layout [] <|
-                column [ height fill, width fill ]
-                    [ header
-{-                     , mainView matches -}
-                    ]
-
         Loading ->
             layout [] <|
                 column [ height fill, width fill ]
@@ -380,6 +247,17 @@ analyzeView res =
 
 
 
+
+
+analysDecoder : D.Decoder Analys
+analysDecoder =
+    D.map Analys
+        (D.field "predictedScore" (
+            D.map2 Score
+                (D.field "hemmalag" D.int)
+                (D.field "bortalag" D.int)
+            ))
+
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
 matchInfoHallareDecoder = 
     D.map3 MatchInfoHallare
@@ -388,13 +266,13 @@ matchInfoHallareDecoder =
         (D.field "bortalag" D.string)
 kupongRadDecoder : D.Decoder KupongRad
 kupongRadDecoder =
-    D.map5 KupongRad
+    D.map6 KupongRad
         (D.field "hemmalag" D.string)
         (D.field "bortalag" D.string)
         (D.field "liga" D.string)
         (D.field "svenskaFolket" matchInfoHallareDecoder)
         (D.field "odds" matchInfoHallareDecoder)
-
+        (D.field "analys" analysDecoder)
 
 kupongDecoder : D.Decoder Kupong
 kupongDecoder =
