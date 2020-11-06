@@ -31,9 +31,9 @@ main =
 
 
 type Model
-    = InputRequestState AnalyzeInput
-    | Loading
-    | Success (List AnalyzeResult)
+    = Loading
+    | InputRequestState AnalyzeInput
+    | Success Kupong
     | Failure
 
 
@@ -49,37 +49,39 @@ type alias MatchInputBox =
     , away : String
     }
 
+type alias KupongRad = 
+    {
+        home : String
+        ,away : String
+        ,liga : String
+        ,svenskaFolket : MatchInfoHallare
+        ,odds : MatchInfoHallare
 
-type alias AnalyzeResult =
-    { predictedScore : String
-    , hometeam : String
-    , awayteam : String
+    }
+type alias Kupong =
+    {
+         name : String
+        ,rader : List KupongRad
     }
 
+type alias AnalyzeResult =
+    { 
+        predictedScore : (Int, Int)
+    }
 
+type alias MatchInfoHallare =   
+    {
+         hemmalag : String
+        ,kryss : String
+        ,bortalag : String
+    }
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( InputRequestState
-        { matches =
-            Dict.fromList
-                [ ( 0, MatchInputBox "" "" )
-                , ( 1, MatchInputBox "" "" )
-                , ( 2, MatchInputBox "" "" )
-                , ( 3, MatchInputBox "" "" )
-                , ( 4, MatchInputBox "" "" )
-                , ( 5, MatchInputBox "" "" )
-                , ( 6, MatchInputBox "" "" )
-                , ( 7, MatchInputBox "" "" )
-                , ( 8, MatchInputBox "" "" )
-                , ( 9, MatchInputBox "" "" )
-                , ( 10, MatchInputBox "" "" )
-                , ( 11, MatchInputBox "" "" )
-                , ( 12, MatchInputBox "" "" )
-                ]
-        , helgarderingar = Just 0
-        , halvgarderingar = Just 0
+    ( Loading
+    , Http.get
+        { url = "./oppenkupong.json"
+        , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
-    , Cmd.none
     )
 
 
@@ -93,8 +95,7 @@ type Msg
     | Changehelgarderingar String
     | Changehalvgarderingar String
     | AddMatch
-    | SendAnalyzeRequest
-    | GotAnalyzeResult (Result Http.Error (List AnalyzeResult))
+    | GotOppenKupong (Result Http.Error Kupong)
 
 
 
@@ -215,20 +216,7 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
-        SendAnalyzeRequest ->
-            case model of
-                InputRequestState _ ->
-                    ( Loading
-                    , Http.get
-                        { url = "./data.json"
-                        , expect = Http.expectJson GotAnalyzeResult analyzeListDecoder
-                        }
-                    )
-
-                _ ->
-                    ( model, Cmd.none )
-
-        GotAnalyzeResult result ->
+        GotOppenKupong result ->
             case model of
                 Loading ->
                     case result of
@@ -272,79 +260,53 @@ header =
             (text "Tipshjälpen")
 
 
-inputMatchesView : AnalyzeInput -> Element Msg
-inputMatchesView matches =
+kupongView : Kupong -> Element Msg
+kupongView kupong =
     column
         [ height <| fillPortion 5
-        , width fill
-        , centerY
-        , Background.color <| rgb255 200 99 118
+        , width <| fillPortion 6
+        , Background.color <| rgb255 250 75 75 
         , paddingEach { top = 20, left = 5, right = 5, bottom = 20 }
+        , Border.rounded 10
         , spacing 10
         ]
-    <|
-        List.map inputView (Dict.toList matches.matches)
+        <|
+            (el [] (text kupong.name)) :: List.map kupongRadView kupong.rader
 
-
-
-{- div
-   []
-   [ header [] [ img [ src "./assets/logo.png" ] [] ]
-   , div []
-       [ div [] (List.map inputView (Dict.toList matches))
-       , button [ onClick AddMatch ] [ text "+" ]
-       , button [ onClick SendAnalyzeRequest ] [ text "Send it!" ]
-       ]
-   ]
--}
-
-
-inputView : ( Int, MatchInputBox ) -> Element Msg
-inputView ( key, val ) =
-    row
-        [ paddingEach { top = 5, left = 5, right = 20, bottom = 0 }
-        , spacing 20
-        , centerY
-        , height shrink
-        ]
-        [ el [ padding 5, width (px 20) ] <| Element.text (String.fromInt (key + 1))
-        , Input.text
-            [ centerX
+kupongRadView : KupongRad -> Element Msg
+kupongRadView rad =
+    column [width fill,Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }, 
+                Border.color <| rgba255 192 192 192 0.3] [
+        el [width fill, Font.size 10] (text rad.liga),
+        row [ width fill] 
+        [
+            column [height fill, width <| fillPortion 3 ] [
+                el [Element.alignTop] (text rad.home),
+                el [Element.alignBottom] (text rad.away)],
+            row [height fill, spacing 10, Font.size 12] [
+                column [height fill] [ 
+                    el [] (text (rad.svenskaFolket.hemmalag ++ "%")), 
+                    el [] (text (rad.svenskaFolket.kryss ++ "%")),
+                    el [] (text (rad.svenskaFolket.bortalag ++ "%"))],
+                column [height fill] [ 
+                    el [] (text rad.odds.hemmalag), 
+                    el [] (text rad.odds.kryss),
+                    el [] (text rad.odds.bortalag)]],
+            column [height fill, width <| fillPortion 3] [ 
+                el [Element.alignRight, Element.alignTop] (text "2"), 
+                el [Element.alignRight, Element.alignBottom] (text "1")
             ]
-            { text = val.home
-            , onChange = Changehome key
-            , placeholder =
-                Just
-                    (Input.placeholder []
-                        (text "Home")
-                    )
-            , label = Input.labelHidden "Hometeam input"
-            }
-        , Input.text
-            [ centerX
-            , centerY
-            ]
-            { text = val.away
-            , onChange = Changeaway key
-            , placeholder =
-                Just
-                    (Input.placeholder []
-                        (text "Away")
-                    )
-            , label = Input.labelHidden "Awayteam input"
-            }
         ]
+    ]
 
 
-mainView : AnalyzeInput -> Element Msg
+mainView : Kupong -> Element Msg
 mainView input =
-    row [ spacing 20, height fill, width fill, padding 10 ]
-        [ inputMatchesView input
-        , column [ spacing 20, width fill, alignTop ]
-            [ garderingInputView "Helgarderingar" input.helgarderingar Changehelgarderingar
-            , garderingInputView "Halvgarderingar" input.halvgarderingar Changehalvgarderingar
-            , valideraGarderingView input
-            ]
+    row [Background.color <| rgba255 100 100 100 0.5, centerX, spacing 20, height fill, width fill, padding 10 ]
+        [   
+            el [width <| fillPortion 2] Element.none,
+            kupongView input,
+            el [width <| fillPortion 2] Element.none
         ]
 
 
@@ -386,33 +348,57 @@ view model =
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
-                    , mainView matches
+{-                     , mainView matches -}
                     ]
 
         Loading ->
-            layout [] <| text "Loading...!"
+            layout [] <|
+                column [ height fill, width fill ]
+                    [ header
+                    , el
+                    [ centerX
+                    , centerY
+                    , Font.color <| rgb255 255 255 255
+                    , Font.size 50
+                    ]
+                        (text "Laddar in kupong...")
+                    ]
 
         Success results ->
-            ul []
-                (List.map (\l -> analyzeView l) results)
-
+            layout [] <|
+                column [ height fill, width fill ]
+                    [ header
+                     , mainView results
+                    ]
         Failure ->
-            layout [] <| text "Something is wrong...!"
+            layout [] <| text "Det gick inte så bra att hitta en kupong."
 
 
-analyzeView : AnalyzeResult -> Html Msg
+analyzeView : KupongRad -> Element Msg
 analyzeView res =
-    div [] []
+    el [] (text res.liga)
 
 
-analyzeDecoder : D.Decoder AnalyzeResult
-analyzeDecoder =
-    D.map3 AnalyzeResult
-        (D.field "predictedScore" D.string)
-        (D.field "hometeam" D.string)
-        (D.field "awayteam" D.string)
+
+matchInfoHallareDecoder : D.Decoder MatchInfoHallare
+matchInfoHallareDecoder = 
+    D.map3 MatchInfoHallare
+        (D.field "hemmalag" D.string)
+        (D.field "kryss" D.string)
+        (D.field "bortalag" D.string)
+kupongRadDecoder : D.Decoder KupongRad
+kupongRadDecoder =
+    D.map5 KupongRad
+        (D.field "hemmalag" D.string)
+        (D.field "bortalag" D.string)
+        (D.field "liga" D.string)
+        (D.field "svenskaFolket" matchInfoHallareDecoder)
+        (D.field "odds" matchInfoHallareDecoder)
 
 
-analyzeListDecoder : D.Decoder (List AnalyzeResult)
-analyzeListDecoder =
-    D.list analyzeDecoder
+kupongDecoder : D.Decoder Kupong
+kupongDecoder =
+    D.map2
+         Kupong 
+         (D.field "namn" D.string)
+         (D.field "matcher" (D.list kupongRadDecoder))

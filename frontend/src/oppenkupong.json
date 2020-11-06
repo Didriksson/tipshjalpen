@@ -1,0 +1,278 @@
+{
+    "matcher": [
+        {
+            "hemmalag": "Chelsea",
+            "bortalag": "Sheffield U",
+            "liga": "Premier League",
+            "svenskaFolket": {
+                "hemmalag": "82",
+                "kryss": "11",
+                "bortalag": "7"
+            },
+            "odds": {
+                "hemmalag": "1,40",
+                "kryss": "5,00",
+                "bortalag": "8,20"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Crystal P",
+            "bortalag": "Leeds",
+            "liga": "Premier League",
+            "svenskaFolket": {
+                "hemmalag": "37",
+                "kryss": "27",
+                "bortalag": "36"
+            },
+            "odds": {
+                "hemmalag": "2,93",
+                "kryss": "3,45",
+                "bortalag": "2,47"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 1
+                }
+            }
+        },
+        {
+            "hemmalag": "West Ham",
+            "bortalag": "Fulham",
+            "liga": "Premier League",
+            "svenskaFolket": {
+                "hemmalag": "67",
+                "kryss": "19",
+                "bortalag": "14"
+            },
+            "odds": {
+                "hemmalag": "1,86",
+                "kryss": "3,90",
+                "bortalag": "4,15"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Norwich",
+            "bortalag": "Swansea",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "47",
+                "kryss": "29",
+                "bortalag": "24"
+            },
+            "odds": {
+                "hemmalag": "2,08",
+                "kryss": "3,33",
+                "bortalag": "3,70"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 1
+                }
+            }
+        },
+        {
+            "hemmalag": "Birmingham",
+            "bortalag": "Bournemouth",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "30",
+                "kryss": "30",
+                "bortalag": "40"
+            },
+            "odds": {
+                "hemmalag": "3,95",
+                "kryss": "3,27",
+                "bortalag": "2,03"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 1
+                }
+            }
+        },
+        {
+            "hemmalag": "Brentford",
+            "bortalag": "Middlesbrough",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "53",
+                "kryss": "26",
+                "bortalag": "21"
+            },
+            "odds": {
+                "hemmalag": "1,79",
+                "kryss": "3,70",
+                "bortalag": "4,50"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Blackburn",
+            "bortalag": "Queens PR",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "54",
+                "kryss": "25",
+                "bortalag": "21"
+            },
+            "odds": {
+                "hemmalag": "1,89",
+                "kryss": "3,70",
+                "bortalag": "4,00"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Huddersfield",
+            "bortalag": "Luton",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "50",
+                "kryss": "25",
+                "bortalag": "25"
+            },
+            "odds": {
+                "hemmalag": "2,22",
+                "kryss": "3,25",
+                "bortalag": "3,40"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Rotherham",
+            "bortalag": "Preston",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "29",
+                "kryss": "26",
+                "bortalag": "45"
+            },
+            "odds": {
+                "hemmalag": "3,15",
+                "kryss": "3,33",
+                "bortalag": "2,30"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 2
+                }
+            }
+        },
+        {
+            "hemmalag": "Watford",
+            "bortalag": "Coventry",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "74",
+                "kryss": "15",
+                "bortalag": "11"
+            },
+            "odds": {
+                "hemmalag": "1,64",
+                "kryss": "3,85",
+                "bortalag": "5,50"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Sheffield W",
+            "bortalag": "Millwall",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "35",
+                "kryss": "28",
+                "bortalag": "37"
+            },
+            "odds": {
+                "hemmalag": "2,70",
+                "kryss": "3,17",
+                "bortalag": "2,75"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 1
+                }
+            }
+        },
+        {
+            "hemmalag": "Nottingham",
+            "bortalag": "Wycombe",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "66",
+                "kryss": "20",
+                "bortalag": "14"
+            },
+            "odds": {
+                "hemmalag": "1,59",
+                "kryss": "3,80",
+                "bortalag": "6,15"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 0
+                }
+            }
+        },
+        {
+            "hemmalag": "Derby",
+            "bortalag": "Barnsley",
+            "liga": "Championship",
+            "svenskaFolket": {
+                "hemmalag": "44",
+                "kryss": "32",
+                "bortalag": "24"
+            },
+            "odds": {
+                "hemmalag": "2,48",
+                "kryss": "3,30",
+                "bortalag": "2,90"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 1
+                }
+            }
+        }
+    ],
+    "namn": "Stryktipset v. 2020-45"
+}

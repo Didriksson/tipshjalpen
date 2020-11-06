@@ -27,5 +27,3 @@ def parse_json(json):
     for m in json['matches']:
         matches.append(match.Match(m.get("date"), m.get("team1"), m.get("team2"), m.get("score", {}).get("ft"), m.get("score", {}).get("ht"), json["name"]))
     return matches
-
-fetch_Ch_2020_21()

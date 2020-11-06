@@ -6,8 +6,7 @@ c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS matches
              (date date, home_team text, away_team text, home_ft integer,away_ft integer, home_ht integer, away_ht, league text
               , PRIMARY KEY(date, home_team, away_team)             
-             )''')
-
+             )''')    
 
 def insertMatch(match):
     if match.halfTime == None:

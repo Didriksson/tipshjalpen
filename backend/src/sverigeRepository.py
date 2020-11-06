@@ -67,8 +67,3 @@ def parseFile(file, ar):
             m = match.Match(datum, home, away, fullTime, halfTime, ligatitel)
             matches.append(m)
     return matches
-
-for m in parseAllsvenskan2020():
-    matchrepository.insertMatch(m)
-
-matchrepository.printMatches()
