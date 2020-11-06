@@ -33,7 +33,7 @@ main =
 
 type Model
     = Loading
-    | Success Kupong
+    | Success PageState
     | Failure
 
 
@@ -63,6 +63,11 @@ type alias Kupong =
          name : String
         ,rader : List KupongRad
     }
+type alias PageState =
+    {
+        kupong : Kupong
+       ,rad : Maybe KupongRad
+    }
 
 type alias MatchInfoHallare =   
     {
@@ -86,6 +91,7 @@ init _ =
 
 type Msg
     =  GotOppenKupong (Result Http.Error Kupong)
+    | KlickadRad KupongRad
 
 
 
@@ -121,12 +127,18 @@ valideraGarderingInput input =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        KlickadRad klickadRad ->
+            case model of
+                Success state ->                    
+                    (Success {state | rad = (Just klickadRad)}, Cmd.none)
+                _ ->
+                    (model, Cmd.none)
         GotOppenKupong result ->
             case model of
                 Loading ->
                     case result of
                         Ok received ->
-                            ( Success received, Cmd.none )
+                            ( Success (PageState received Nothing), Cmd.none )
 
                         Err _ ->
                             ( Failure, Cmd.none )
@@ -168,8 +180,7 @@ header =
 kupongView : Kupong -> Element Msg
 kupongView kupong =
     column
-        [ height <| fillPortion 5
-        , width <| fillPortion 6
+        [ width fill
         , Background.color <| rgb255 250 75 75 
         , paddingEach { top = 20, left = 5, right = 5, bottom = 20 }
         , Border.rounded 10
@@ -180,7 +191,9 @@ kupongView kupong =
 
 kupongRadView : KupongRad -> Element Msg
 kupongRadView rad =
-    column [width fill,Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }, 
+    column [
+        Element.Events.onClick (KlickadRad rad),
+        width fill,Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }, 
                 Border.color <| rgba255 192 192 192 0.3] [
         el [width fill, Font.size 10] (text rad.liga),
         row [ width fill] 
@@ -205,13 +218,25 @@ kupongRadView rad =
     ]
 
 
-mainView : Kupong -> Element Msg
-mainView input =
-    row [Background.color <| rgba255 100 100 100 0.5, centerX, spacing 20, height fill, width fill, padding 10 ]
+mainView : PageState -> Element Msg
+mainView state =
+    row [Background.color <| rgba255 100 100 100 0.5, width fill, height fill, padding 50, spacing 20 ]
         [   
-            el [width <| fillPortion 2] Element.none,
-            kupongView input,
-            el [width <| fillPortion 2] Element.none
+            column 
+                [ width fill
+                , centerY
+                , spacing 10
+                , Border.color <| rgb255 0xE0 0xE0 0xE0] [
+                kupongView state.kupong
+            ]   
+           ,column [width fill, height fill, spacing 10 ]
+           [
+                case state.rad of
+                    Nothing ->
+                        Element.none
+                    Just rad ->
+                        analyzeView rad
+           ] 
         ]
 
 
@@ -242,8 +267,18 @@ view model =
 
 
 analyzeView : KupongRad -> Element Msg
-analyzeView res =
-    el [] (text res.liga)
+analyzeView rad =
+    column [width fill, height fill, spacing 10, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128] [
+             column [ centerX, Font.bold ] [
+                el [centerX, Font.extraLight] <| text rad.liga,
+                el [centerX] <| text (rad.home ++ " - " ++ rad.away)
+            ],
+            column [][
+                el [] <| text ("Predicted score: " ++ (String.fromInt rad.analys.predictedScore.hemmalag) ++ " - " ++ (String.fromInt rad.analys.predictedScore.bortalag)),
+                el [] <| text ("Odds" ++ " 1: " ++ rad.odds.hemmalag ++ " X: " ++ rad.odds.kryss ++ " 2: " ++ rad.odds.bortalag),
+                el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
+            ]
+        ]
 
 
 
