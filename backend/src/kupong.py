@@ -1,6 +1,13 @@
 from dataclasses import dataclass
 import poissonresult
 
+
+@dataclass(init=False)
+class MatchinfoHallare:
+    hemmalag : str
+    kryss : str
+    bortalag : str
+
 @dataclass
 class PredictedScore:
     hemmalag : int
@@ -9,29 +16,20 @@ class PredictedScore:
 @dataclass(init=False)
 class Analys:
     predictedScore : PredictedScore
+    outcomePercentage : MatchinfoHallare
 
     def predictedScore(self, hemmalag, bortalag):
         self.predictedScore = PredictedScore(hemmalag, bortalag)
-
-@dataclass(init=False)
-class Odds:
-    hemmalag : str
-    kryss : str
-    bortalag : str
-
-@dataclass(init=False)
-class SvenskaFolket:
-    hemmalag : str
-    kryss : str
-    bortalag : str
+    def outcomePercentage(self, hemmalag, kryss, bortalag):
+        self.outcomePercentage= MatchinfoHallare(hemmalag, kryss, bortalag)
 
 @dataclass(init=False)
 class KupongRad:
     hemmalag : str
     bortalag : str
     liga : str
-    svenskaFolket : SvenskaFolket
-    odds : Odds
+    svenskaFolket : MatchinfoHallare
+    odds : MatchinfoHallare
     analys : Analys
 
 @dataclass

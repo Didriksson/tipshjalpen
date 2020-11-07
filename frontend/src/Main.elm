@@ -44,6 +44,7 @@ type alias Score =
 
 type alias Analys =
     { predictedScore : Score
+    , outcomePercentage : MatchInfoHallare
     }
 
 
@@ -53,7 +54,7 @@ type alias KupongRad =
     , liga : String
     , svenskaFolket : MatchInfoHallare
     , odds : MatchInfoHallare
-    , analys : Analys
+    , analys : Maybe Analys
     }
 
 
@@ -217,12 +218,22 @@ kupongRadView rad =
                     , el [] (text rad.odds.bortalag)
                     ]
                 ]
-            , column [ height fill, width <| fillPortion 3 ]
-                [ el [ Element.alignRight, Element.alignTop ] (text (String.fromInt rad.analys.predictedScore.hemmalag))
-                , el [ Element.alignRight, Element.alignBottom ] (text (String.fromInt rad.analys.predictedScore.bortalag))
-                ]
+            , column [ height fill, width <| fillPortion 3 ] <|
+                predictedScoreView rad.analys
             ]
         ]
+
+
+predictedScoreView : Maybe Analys -> List (Element msg)
+predictedScoreView maybeAnalys =
+    case maybeAnalys of
+        Just a ->
+            [ el [ Element.alignRight, Element.alignTop ] (text (String.fromInt a.predictedScore.hemmalag))
+            , el [ Element.alignRight, Element.alignBottom ] (text (String.fromInt a.predictedScore.bortalag))
+            ]
+
+        Nothing ->
+            [ el [] Element.none ]
 
 
 mainView : PageState -> Element Msg
@@ -276,28 +287,36 @@ view model =
 
 analyzeView : KupongRad -> Element Msg
 analyzeView rad =
-    column [ width fill, height fill, spacing 10, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128 ]
-        [ column [ centerX, Font.bold ]
-            [ el [ centerX, Font.extraLight ] <| text rad.liga
-            , el [ centerX ] <| text (rad.home ++ " - " ++ rad.away)
-            ]
-        , column []
-            [ el [] <| text ("Predicted score: " ++ String.fromInt rad.analys.predictedScore.hemmalag ++ " - " ++ String.fromInt rad.analys.predictedScore.bortalag)
-            , el [] <| text ("Odds" ++ " 1: " ++ rad.odds.hemmalag ++ " X: " ++ rad.odds.kryss ++ " 2: " ++ rad.odds.bortalag)
-            , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
-            ]
-        ]
+    case rad.analys of
+        Just analys ->
+            column [ width fill, height fill, spacing 10, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128 ]
+                [ column [ centerX, Font.bold ]
+                    [ el [ centerX, Font.extraLight ] <| text rad.liga
+                    , el [ centerX ] <| text (rad.home ++ " - " ++ rad.away)
+                    ]
+                , column []
+                    [ el [] <| text ("Predicted score: " ++ String.fromInt analys.predictedScore.hemmalag ++ " - " ++ String.fromInt analys.predictedScore.bortalag)
+                    , el [] <| text ("Poissonanalys win/draw/win: " ++ analys.outcomePercentage.hemmalag ++ " " ++ analys.outcomePercentage.kryss ++ " " ++ analys.outcomePercentage.bortalag)
+                    , el [] <| text ("Odds" ++ " 1: " ++ rad.odds.hemmalag ++ " X: " ++ rad.odds.kryss ++ " 2: " ++ rad.odds.bortalag)
+                    , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
+                    ]
+                ]
+
+        Nothing ->
+            text "Kunde inte analysera den här matchen. Försök igen senare."
 
 
 analysDecoder : D.Decoder Analys
 analysDecoder =
-    D.map Analys
+    D.map2
+        Analys
         (D.field "predictedScore"
             (D.map2 Score
                 (D.field "hemmalag" D.int)
                 (D.field "bortalag" D.int)
             )
         )
+        (D.field "outcomePercentage" matchInfoHallareDecoder)
 
 
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
@@ -316,7 +335,7 @@ kupongRadDecoder =
         (D.field "liga" D.string)
         (D.field "svenskaFolket" matchInfoHallareDecoder)
         (D.field "odds" matchInfoHallareDecoder)
-        (D.field "analys" analysDecoder)
+        (D.maybe (D.field "analys" analysDecoder))
 
 
 kupongDecoder : D.Decoder Kupong

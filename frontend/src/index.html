@@ -12355,137 +12355,146 @@ var $mdgriffith$elm_ui$Element$Border$widthEach = function (_v0) {
 			bottom,
 			left));
 };
-var $author$project$Main$kupongRadView = function (rad) {
-	return A2(
-		$mdgriffith$elm_ui$Element$column,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Events$onClick(
-				$author$project$Main$KlickadRad(rad)),
-				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-				$mdgriffith$elm_ui$Element$Border$widthEach(
-				{bottom: 0, left: 0, right: 0, top: 2}),
-				$mdgriffith$elm_ui$Element$Border$color(
-				A4($mdgriffith$elm_ui$Element$rgba255, 192, 192, 192, 0.3))
-			]),
-		_List_fromArray(
-			[
-				A2(
-				$mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-						$mdgriffith$elm_ui$Element$Font$size(10)
-					]),
-				$mdgriffith$elm_ui$Element$text(rad.liga)),
-				A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$column,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Element$width(
-								$mdgriffith$elm_ui$Element$fillPortion(3))
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$alignTop]),
-								$mdgriffith$elm_ui$Element$text(rad.home)),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$alignBottom]),
-								$mdgriffith$elm_ui$Element$text(rad.away))
-							])),
-						A2(
-						$mdgriffith$elm_ui$Element$row,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Element$spacing(10),
-								$mdgriffith$elm_ui$Element$Font$size(12)
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$column,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(rad.svenskaFolket.hemmalag + '%')),
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(rad.svenskaFolket.kryss + '%')),
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(rad.svenskaFolket.bortalag + '%'))
-									])),
-								A2(
-								$mdgriffith$elm_ui$Element$column,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(rad.odds.hemmalag)),
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(rad.odds.kryss)),
-										A2(
-										$mdgriffith$elm_ui$Element$el,
-										_List_Nil,
-										$mdgriffith$elm_ui$Element$text(rad.odds.bortalag))
-									]))
-							])),
-						A2(
-						$mdgriffith$elm_ui$Element$column,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-								$mdgriffith$elm_ui$Element$width(
-								$mdgriffith$elm_ui$Element$fillPortion(3))
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$alignRight, $mdgriffith$elm_ui$Element$alignTop]),
-								$mdgriffith$elm_ui$Element$text(
-									$elm$core$String$fromInt(rad.analys.predictedScore.hemmalag))),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[$mdgriffith$elm_ui$Element$alignRight, $mdgriffith$elm_ui$Element$alignBottom]),
-								$mdgriffith$elm_ui$Element$text(
-									$elm$core$String$fromInt(rad.analys.predictedScore.bortalag)))
-							]))
-					]))
-			]));
-};
+var $author$project$Main$kupongRadView = F2(
+	function (index, rad) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Events$onClick(
+					$author$project$Main$KlickadRad(rad)),
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$Border$widthEach(
+					{bottom: 0, left: 0, right: 0, top: 2}),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A4($mdgriffith$elm_ui$Element$rgba255, 192, 192, 192, 0.3))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$Font$size(10)
+						]),
+					$mdgriffith$elm_ui$Element$text(rad.liga)),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$padding(10)
+								]),
+							$mdgriffith$elm_ui$Element$text(
+								$elm$core$String$fromInt(index + 1) + '.')),
+							A2(
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$width(
+									$mdgriffith$elm_ui$Element$fillPortion(3))
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[$mdgriffith$elm_ui$Element$alignTop]),
+									$mdgriffith$elm_ui$Element$text(rad.home)),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[$mdgriffith$elm_ui$Element$alignBottom]),
+									$mdgriffith$elm_ui$Element$text(rad.away))
+								])),
+							A2(
+							$mdgriffith$elm_ui$Element$row,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$spacing(10),
+									$mdgriffith$elm_ui$Element$Font$size(12)
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$column,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_Nil,
+											$mdgriffith$elm_ui$Element$text(rad.svenskaFolket.hemmalag + '%')),
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_Nil,
+											$mdgriffith$elm_ui$Element$text(rad.svenskaFolket.kryss + '%')),
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_Nil,
+											$mdgriffith$elm_ui$Element$text(rad.svenskaFolket.bortalag + '%'))
+										])),
+									A2(
+									$mdgriffith$elm_ui$Element$column,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_Nil,
+											$mdgriffith$elm_ui$Element$text(rad.odds.hemmalag)),
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_Nil,
+											$mdgriffith$elm_ui$Element$text(rad.odds.kryss)),
+											A2(
+											$mdgriffith$elm_ui$Element$el,
+											_List_Nil,
+											$mdgriffith$elm_ui$Element$text(rad.odds.bortalag))
+										]))
+								])),
+							A2(
+							$mdgriffith$elm_ui$Element$column,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+									$mdgriffith$elm_ui$Element$width(
+									$mdgriffith$elm_ui$Element$fillPortion(3))
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[$mdgriffith$elm_ui$Element$alignRight, $mdgriffith$elm_ui$Element$alignTop]),
+									$mdgriffith$elm_ui$Element$text(
+										$elm$core$String$fromInt(rad.analys.predictedScore.hemmalag))),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[$mdgriffith$elm_ui$Element$alignRight, $mdgriffith$elm_ui$Element$alignBottom]),
+									$mdgriffith$elm_ui$Element$text(
+										$elm$core$String$fromInt(rad.analys.predictedScore.bortalag)))
+								]))
+						]))
+				]));
+	});
 var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
 	function (top, right, bottom, left) {
 		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
@@ -12539,7 +12548,7 @@ var $author$project$Main$kupongView = function (kupong) {
 				$mdgriffith$elm_ui$Element$el,
 				_List_Nil,
 				$mdgriffith$elm_ui$Element$text(kupong.name)),
-			A2($elm$core$List$map, $author$project$Main$kupongRadView, kupong.rader)));
+			A2($elm$core$List$indexedMap, $author$project$Main$kupongRadView, kupong.rader)));
 };
 var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
 var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
