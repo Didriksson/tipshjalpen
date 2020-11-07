@@ -131,6 +131,8 @@ dmypy.json
 #Elm-stuff
 frontend/elm-stuff/*
 frontend/elm-stuff
+frontend/index.html
+frontend/node_modules
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
