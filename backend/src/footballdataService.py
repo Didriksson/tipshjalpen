@@ -12,7 +12,13 @@ def getMatchesForLeague(league):
     connection = http.client.HTTPConnection('api.football-data.org')
     headers = { 'X-Auth-Token': FD_API_KEY }
     connection.request('GET', '/v2/competitions/'+league+"/matches", None, headers )
-    response = json.loads(connection.getresponse().read().decode())
+    responseObject = connection.getresponse()
+    print(responseObject.status)
+    if responseObject.status != 200:
+        print("Fick oväntad returkod från api.football-data:", responseObject.status)
+        return []
+
+    response = json.loads(responseObject.read().decode())
     return parseJson(response)
 
 def parseJson(matchesJson):

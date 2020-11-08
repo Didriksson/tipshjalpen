@@ -1,8 +1,9 @@
 import csv
 import re
 import datetime
-import englandRepository
 import sverigeRepository
+import footballdataService
+from functools import lru_cache
 
 ligor = {
     "PL_2019/20": "backend/src/data/england/1-premierleague_20192020.txt",
@@ -10,11 +11,21 @@ ligor = {
     "CL_20192020": "backend/src/data/championsleague/cl_20192020.txt"
 }
 
-def matcherPL():    
-    return englandRepository.fetch_PL_2020_21()
+@lru_cache(maxsize=None)
+def matcher(liga):
+    if liga == "Premier League":
+        return footballdataService.getMatchesForLeague('PL')
+    if liga == "Championship":
+        return footballdataService.getMatchesForLeague('ELC')
+    if liga == "Serie A":
+        return footballdataService.getMatchesForLeague('SA')
+    if liga == "LaLiga":
+        return footballdataService.getMatchesForLeague('PD')
+    if liga == "Bundesliga":
+        return footballdataService.getMatchesForLeague('BL1')
+    if liga == "Allsvenskan":
+        return matcherAllsvenskan()
 
-def matcherCh():    
-    return englandRepository.fetch_Ch_2020_21()
 
 def matcherAllsvenskan():
     return sverigeRepository.parseAllsvenskan2020()
