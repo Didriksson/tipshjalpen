@@ -43,4 +43,4 @@ def tippaMatch(hemma, borta, liga):
         return result
     except:
         e = sys.exc_info()[0]
-        print("Fångat fel vid resultat för match", hemma, "-", borta, "antal matcher: ", len(matcher), ",fel fångat", e)
+        print("Fångat fel vid resultat för match", hemma, "-", borta, ",fel fångat", e)

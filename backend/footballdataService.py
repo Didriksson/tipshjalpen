@@ -1,8 +1,8 @@
 import http.client
 import match
 import json
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 FD_API_KEY = os.environ.get('FOOTBALL_DATA_KEY')
