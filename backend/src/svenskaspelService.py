@@ -10,11 +10,11 @@ SV_API_KEY = os.environ.get('SV_API_KEY')
 def fetchOpen(tips):
     r = requests.get('https://api.www.svenskaspel.se/external/draw/' + tips + '/draws?accesskey=' + SV_API_KEY)    
 
-    if r.status_code is 404:
+    if r.status_code == 404:
         print("Inget spel hittat mot stryktipset: " + str(r.status_code))
         return None
 
-    if r.status_code is not 200:
+    if r.status_code != 200:
         print("Fick felkod: " + str(r.status_code))
         return None    
 
@@ -30,14 +30,14 @@ def fetchOpen(tips):
         rad.liga = event['league']['name']
 
         if event['distribution']:
-            folket = kupong.SvenskaFolket()
+            folket = kupong.MatchinfoHallare()
             folket.hemmalag = event['distribution']['home']
             folket.kryss = event['distribution']['draw']
             folket.bortalag = event['distribution']['away']
             rad.svenskaFolket = folket
         
         if event['odds']:
-            odds = kupong.Odds()
+            odds = kupong.MatchinfoHallare()
             odds.hemmalag = event['odds']['home']
             odds.kryss = event['odds']['draw']
             odds.bortalag = event['odds']['away']

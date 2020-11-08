@@ -21,7 +21,11 @@ class Analys:
     def predictedScore(self, hemmalag, bortalag):
         self.predictedScore = PredictedScore(hemmalag, bortalag)
     def outcomePercentage(self, hemmalag, kryss, bortalag):
-        self.outcomePercentage= MatchinfoHallare(hemmalag, kryss, bortalag)
+        outcome = MatchinfoHallare()
+        outcome.hemmalag = str(hemmalag)
+        outcome.kryss = str(kryss)
+        outcome.bortalag = str(bortalag)
+        self.outcomePercentage = outcome
 
 @dataclass(init=False)
 class KupongRad:

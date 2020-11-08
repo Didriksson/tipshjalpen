@@ -28,7 +28,7 @@ class PoissonResult:
                     draw += probability
                 else:
                      away += probability
-        return home,draw,away
+        return '{:.1%}'.format(home),'{:.1%}'.format(draw),'{:.1%}'.format(away)
                     
 
     def getMostProbableScore(self):

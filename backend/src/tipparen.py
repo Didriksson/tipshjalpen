@@ -16,7 +16,8 @@ import json
 
 # Svenskaspels namn -> Datat
 svenskaSpelsLagnamn = {
-    "Queens PR" : "Queens Park Rangers FC"
+    "Queens PR" : "Queens Park Rangers FC",
+    "Bayer Leverkusen" : "Bayer 04 Leverkusen" 
 }
 
 def skrivOmSvenskaspelsLagnamn(lag, matcher):
@@ -44,6 +45,25 @@ def tippaMatch(hemma, borta, liga):
     matchesPl = footballdataService.parseJson(matchesJson)
     ligaCache['Premier League'] = matchesPl
 
+    f = open("fd_matches_seriea.txt", "r")
+    matchesJson = json.load(f)
+    f.close()
+    matchesSA = footballdataService.parseJson(matchesJson)
+    ligaCache['Serie A'] = matchesSA
+
+    f = open("fd_matches_laliga.txt", "r")
+    matchesJson = json.load(f)
+    f.close()
+    matchesPD = footballdataService.parseJson(matchesJson)
+    ligaCache['LaLiga'] = matchesPD
+
+    f = open("fd_matches_bundesliga.txt", "r")
+    matchesJson = json.load(f)
+    f.close()
+    matchesBL = footballdataService.parseJson(matchesJson)
+    ligaCache['Bundesliga'] = matchesBL
+
+    print("Analyserar", hemma, "-", borta,)
     matcher = []
     if liga in ligaCache:
         matcher = ligaCache[liga]
@@ -57,11 +77,15 @@ def tippaMatch(hemma, borta, liga):
         if liga == "Championship":
             matcher = resultatslangaren.matcherCh()
             ligaCache[liga] = matcher
+        if liga == "Allsvenskan":
+            matcher = resultatslangaren.matcherAllsvenskan()
+            ligaCache[liga] = matcher
+
 #    try:
     matcher = skrivOmSvenskaspelsLagnamn(hemma, matcher)
     matcher = skrivOmSvenskaspelsLagnamn(borta, matcher)
     result = poissondistribution.getPoissonForMatch(hemma, borta, matcher)
-    print(hemma, "-", borta, ": ", result.getMostProbableScore())
+    print("Klar: ", result)
     return result
  #   except:
  #       e = sys.exc_info()[0]
@@ -69,3 +93,4 @@ def tippaMatch(hemma, borta, liga):
 
 
 
+tippaMatch("Helsingborgs IF", "IFK Göteborg", "Allsvenskan")

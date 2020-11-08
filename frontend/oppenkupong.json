@@ -5,14 +5,14 @@
             "bortalag": "Liverpool",
             "liga": "Premier League",
             "svenskaFolket": {
-                "hemmalag": "41",
+                "hemmalag": "43",
                 "kryss": "27",
-                "bortalag": "32"
+                "bortalag": "30"
             },
             "odds": {
-                "hemmalag": "2,01",
-                "kryss": "4,00",
-                "bortalag": "3,50"
+                "hemmalag": "1,96",
+                "kryss": "4,20",
+                "bortalag": "3,48"
             },
             "analys": {
                 "predictedScore": {
@@ -31,8 +31,8 @@
             "bortalag": "Aston Villa",
             "liga": "Premier League",
             "svenskaFolket": {
-                "hemmalag": "71",
-                "kryss": "17",
+                "hemmalag": "70",
+                "kryss": "18",
                 "bortalag": "12"
             },
             "odds": {
@@ -57,14 +57,14 @@
             "bortalag": "Wolverhampton",
             "liga": "Premier League",
             "svenskaFolket": {
-                "hemmalag": "55",
-                "kryss": "25",
-                "bortalag": "20"
+                "hemmalag": "52",
+                "kryss": "27",
+                "bortalag": "21"
             },
             "odds": {
-                "hemmalag": "2,38",
-                "kryss": "3,20",
-                "bortalag": "3,30"
+                "hemmalag": "2,32",
+                "kryss": "3,30",
+                "bortalag": "3,33"
             },
             "analys": {
                 "predictedScore": {
@@ -83,14 +83,25 @@
             "bortalag": "AIK",
             "liga": "Allsvenskan",
             "svenskaFolket": {
-                "hemmalag": "40",
-                "kryss": "31",
-                "bortalag": "29"
+                "hemmalag": "38",
+                "kryss": "32",
+                "bortalag": "30"
             },
             "odds": {
-                "hemmalag": "2,18",
-                "kryss": "3,37",
-                "bortalag": "3,65"
+                "hemmalag": "2,15",
+                "kryss": "3,22",
+                "bortalag": "3,95"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "53.5%",
+                    "kryss": "26.0%",
+                    "bortalag": "20.0%"
+                }
             }
         },
         {
@@ -99,13 +110,24 @@
             "liga": "Allsvenskan",
             "svenskaFolket": {
                 "hemmalag": "12",
-                "kryss": "20",
-                "bortalag": "68"
+                "kryss": "21",
+                "bortalag": "67"
             },
             "odds": {
-                "hemmalag": "4,15",
-                "kryss": "3,95",
-                "bortalag": "1,87"
+                "hemmalag": "3,75",
+                "kryss": "3,85",
+                "bortalag": "1,98"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 1
+                },
+                "outcomePercentage": {
+                    "hemmalag": "42.2%",
+                    "kryss": "22.9%",
+                    "bortalag": "33.5%"
+                }
             }
         },
         {
@@ -114,13 +136,24 @@
             "liga": "Allsvenskan",
             "svenskaFolket": {
                 "hemmalag": "35",
-                "kryss": "32",
-                "bortalag": "33"
+                "kryss": "33",
+                "bortalag": "32"
             },
             "odds": {
-                "hemmalag": "2,72",
-                "kryss": "3,42",
-                "bortalag": "2,70"
+                "hemmalag": "2,82",
+                "kryss": "3,37",
+                "bortalag": "2,63"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 0,
+                    "bortalag": 1
+                },
+                "outcomePercentage": {
+                    "hemmalag": "26.4%",
+                    "kryss": "30.8%",
+                    "bortalag": "42.7%"
+                }
             }
         },
         {
@@ -128,14 +161,25 @@
             "bortalag": "Kalmar FF",
             "liga": "Allsvenskan",
             "svenskaFolket": {
-                "hemmalag": "57",
-                "kryss": "22",
+                "hemmalag": "55",
+                "kryss": "24",
                 "bortalag": "21"
             },
             "odds": {
-                "hemmalag": "2,25",
-                "kryss": "3,80",
-                "bortalag": "3,10"
+                "hemmalag": "2,55",
+                "kryss": "3,50",
+                "bortalag": "2,85"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 1
+                },
+                "outcomePercentage": {
+                    "hemmalag": "46.6%",
+                    "kryss": "23.1%",
+                    "bortalag": "29.0%"
+                }
             }
         },
         {
@@ -143,14 +187,25 @@
             "bortalag": "IK Sirius",
             "liga": "Allsvenskan",
             "svenskaFolket": {
-                "hemmalag": "86",
+                "hemmalag": "87",
                 "kryss": "10",
-                "bortalag": "4"
+                "bortalag": "3"
             },
             "odds": {
-                "hemmalag": "1,37",
-                "kryss": "5,45",
-                "bortalag": "8,75"
+                "hemmalag": "1,33",
+                "kryss": "5,65",
+                "bortalag": "9,60"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "59.0%",
+                    "kryss": "25.5%",
+                    "bortalag": "15.0%"
+                }
             }
         },
         {
@@ -158,14 +213,25 @@
             "bortalag": "Hellas Verona",
             "liga": "Serie A",
             "svenskaFolket": {
-                "hemmalag": "79",
-                "kryss": "16",
-                "bortalag": "5"
+                "hemmalag": "76",
+                "kryss": "17",
+                "bortalag": "7"
             },
             "odds": {
                 "hemmalag": "1,42",
                 "kryss": "4,85",
                 "bortalag": "7,10"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "57.7%",
+                    "kryss": "28.5%",
+                    "bortalag": "13.5%"
+                }
             }
         },
         {
@@ -173,14 +239,25 @@
             "bortalag": "Inter",
             "liga": "Serie A",
             "svenskaFolket": {
-                "hemmalag": "36",
-                "kryss": "28",
-                "bortalag": "36"
+                "hemmalag": "34",
+                "kryss": "29",
+                "bortalag": "37"
             },
             "odds": {
-                "hemmalag": "2,85",
-                "kryss": "3,70",
-                "bortalag": "2,32"
+                "hemmalag": "3,00",
+                "kryss": "3,85",
+                "bortalag": "2,17"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 3
+                },
+                "outcomePercentage": {
+                    "hemmalag": "10.4%",
+                    "kryss": "11.1%",
+                    "bortalag": "58.1%"
+                }
             }
         },
         {
@@ -189,13 +266,24 @@
             "liga": "LaLiga",
             "svenskaFolket": {
                 "hemmalag": "7",
-                "kryss": "15",
-                "bortalag": "78"
+                "kryss": "14",
+                "bortalag": "79"
             },
             "odds": {
-                "hemmalag": "5,20",
-                "kryss": "4,50",
-                "bortalag": "1,57"
+                "hemmalag": "6,20",
+                "kryss": "4,85",
+                "bortalag": "1,46"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 1,
+                    "bortalag": 3
+                },
+                "outcomePercentage": {
+                    "hemmalag": "8.5%",
+                    "kryss": "11.9%",
+                    "bortalag": "68.9%"
+                }
             }
         },
         {
@@ -204,13 +292,24 @@
             "liga": "LaLiga",
             "svenskaFolket": {
                 "hemmalag": "70",
-                "kryss": "19",
-                "bortalag": "11"
+                "kryss": "18",
+                "bortalag": "12"
             },
             "odds": {
-                "hemmalag": "1,43",
-                "kryss": "4,60",
-                "bortalag": "7,30"
+                "hemmalag": "1,24",
+                "kryss": "5,85",
+                "bortalag": "13,40"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 3,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "78.6%",
+                    "kryss": "7.9%",
+                    "bortalag": "2.7%"
+                }
             }
         },
         {
@@ -223,9 +322,20 @@
                 "bortalag": "30"
             },
             "odds": {
-                "hemmalag": "2,35",
-                "kryss": "3,65",
-                "bortalag": "2,83"
+                "hemmalag": "2,55",
+                "kryss": "3,70",
+                "bortalag": "2,57"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 1
+                },
+                "outcomePercentage": {
+                    "hemmalag": "54.3%",
+                    "kryss": "19.7%",
+                    "bortalag": "22.7%"
+                }
             }
         }
     ],

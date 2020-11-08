@@ -33,13 +33,20 @@ def avgGoalsConcededHomeForTeamHome(lag, matcher):
     return statistics.mean(list(map(lambda y: y.fullTime[1],filter(lambda x: lag in x.homeTeam, matcher))))    
 
 def awayTeamDefenceStrength(lag, matcher):
-    return avgGoalsConcededAwayForTeamAway(lag, matcher)/avgConcededAwayForLeague(matcher)
+    avgConcededAwayTeam = avgGoalsConcededAwayForTeamAway(lag, matcher)
+    avgConcededAwayLeague = avgConcededAwayForLeague(matcher)
+    return avgConcededAwayTeam/avgConcededAwayLeague
 
 def homeTeamDefenceStrength(lag, matcher):
     return avgGoalsConcededHomeForTeamHome(lag, matcher)/avgConcededHomeForLeague(matcher)
 
 def projectedExpectedHomeTeamGoals(hometeam, awayteam, matcher):
-    return homeTeamAttackingStrength(hometeam, matcher) * awayTeamDefenceStrength(awayteam, matcher) * avgScoredHomeForLeague(matcher)
+    homeStr = homeTeamAttackingStrength(hometeam, matcher) 
+    awayDefStr = awayTeamDefenceStrength(awayteam, matcher)
+    avgForLeague = avgScoredHomeForLeague(matcher)
+    assert avgForLeague != 0.0
+    
+    return homeStr * awayDefStr * avgForLeague
 
 def projectedExpectedAwayTeamGoals(hometeam, awayteam, matcher):
     return awayTeamAttackingStrength(awayteam, matcher) * homeTeamDefenceStrength(hometeam, matcher) * avgScoredAwayForLeague(matcher)
@@ -47,7 +54,7 @@ def projectedExpectedAwayTeamGoals(hometeam, awayteam, matcher):
 def getPoissonForMatch(home, away, alla_matcher):
     if alla_matcher == []:
         print("Inga matcher hittade...")
-        return PoissonResult(None, None)
+        return None
 
     alla_matcher = list(filter(lambda y: y.fullTime, alla_matcher))
     projectedHomeGoals = projectedExpectedHomeTeamGoals(home, away, alla_matcher)
