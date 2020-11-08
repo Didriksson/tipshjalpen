@@ -6,9 +6,11 @@ import kupong as Kupong
 from flask import Flask
 app = Flask(__name__)
 
-@app.route('/hello/<name>')
-def hello(name):
-    return 'Hello ' + name + '!'
+
+# A welcome message to test our server
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
 
 @app.route('/hamtaKupong')
 def hamtarKupong():
@@ -29,5 +31,6 @@ def hamtarKupong():
     jsonpickle.set_encoder_options('json', ensure_ascii=False)
     return jsonpickle.encode(kupong, unpicklable=False)
 
-
-print(hamtarKupong())
+if __name__ == '__main__':
+    # Threaded option to enable multiple instances for multiple user access support
+    app.run(threaded=True, port=5000)
