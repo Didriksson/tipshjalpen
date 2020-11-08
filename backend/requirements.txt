@@ -1,6 +1,0 @@
-Flask
-Gunicorn
-requests
-python-dotenv
-jsonpickle
-scipy
