@@ -6,9 +6,9 @@ import footballdataService
 from functools import lru_cache
 
 ligor = {
-    "PL_2019/20": "backend/src/data/england/1-premierleague_20192020.txt",
-    "PL_2015/16": "backend/src/data/england/1-premierleague_20152016.txt",
-    "CL_20192020": "backend/src/data/championsleague/cl_20192020.txt"
+    "PL_2019/20": "backend/data/england/1-premierleague_20192020.txt",
+    "PL_2015/16": "backend/data/england/1-premierleague_20152016.txt",
+    "CL_20192020": "backend/data/championsleague/cl_20192020.txt"
 }
 
 @lru_cache(maxsize=None)
