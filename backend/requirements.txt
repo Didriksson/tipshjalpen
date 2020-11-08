@@ -2,4 +2,5 @@ Flask
 Gunicorn
 requests
 python-dotenv
-jsonpicke
+jsonpickle
+scipy
