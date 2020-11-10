@@ -1,343 +1,993 @@
 {
     "matcher": [
         {
-            "hemmalag": "Manchester C",
-            "bortalag": "Liverpool",
-            "liga": "Premier League",
-            "svenskaFolket": {
-                "hemmalag": "43",
-                "kryss": "27",
-                "bortalag": "30"
-            },
-            "odds": {
-                "hemmalag": "1,96",
-                "kryss": "4,20",
-                "bortalag": "3,48"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 3,
-                    "bortalag": 2
-                },
-                "outcomePercentage": {
-                    "hemmalag": "35.4%",
-                    "kryss": "16.4%",
-                    "bortalag": "32.3%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Arsenal",
-            "bortalag": "Aston Villa",
-            "liga": "Premier League",
-            "svenskaFolket": {
-                "hemmalag": "70",
-                "kryss": "18",
-                "bortalag": "12"
-            },
-            "odds": {
-                "hemmalag": "1,73",
-                "kryss": "3,95",
-                "bortalag": "4,95"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 0,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "0.0%",
-                    "kryss": "31.1%",
-                    "bortalag": "68.7%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Leicester",
-            "bortalag": "Wolverhampton",
-            "liga": "Premier League",
-            "svenskaFolket": {
-                "hemmalag": "52",
-                "kryss": "27",
-                "bortalag": "21"
-            },
-            "odds": {
-                "hemmalag": "2,32",
-                "kryss": "3,30",
-                "bortalag": "3,33"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "36.9%",
-                    "kryss": "27.8%",
-                    "bortalag": "34.9%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Djurgården",
-            "bortalag": "AIK",
-            "liga": "Allsvenskan",
-            "svenskaFolket": {
-                "hemmalag": "38",
-                "kryss": "32",
-                "bortalag": "30"
-            },
-            "odds": {
-                "hemmalag": "2,15",
-                "kryss": "3,22",
-                "bortalag": "3,95"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 0
-                },
-                "outcomePercentage": {
-                    "hemmalag": "53.5%",
-                    "kryss": "26.0%",
-                    "bortalag": "20.0%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Varbergs BoIS",
-            "bortalag": "Hammarby",
-            "liga": "Allsvenskan",
-            "svenskaFolket": {
-                "hemmalag": "12",
-                "kryss": "21",
-                "bortalag": "67"
-            },
-            "odds": {
-                "hemmalag": "3,75",
-                "kryss": "3,85",
-                "bortalag": "1,98"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "42.2%",
-                    "kryss": "22.9%",
-                    "bortalag": "33.5%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Helsingborgs IF",
-            "bortalag": "IFK Göteborg",
-            "liga": "Allsvenskan",
+            "hemmalag": "Danmark",
+            "bortalag": "Sverige",
+            "liga": "Fotbollslandskamp",
             "svenskaFolket": {
                 "hemmalag": "35",
-                "kryss": "33",
-                "bortalag": "32"
+                "kryss": "32",
+                "bortalag": "33"
             },
             "odds": {
-                "hemmalag": "2,82",
-                "kryss": "3,37",
-                "bortalag": "2,63"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 0,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "26.4%",
-                    "kryss": "30.8%",
-                    "bortalag": "42.7%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Örebro SK",
-            "bortalag": "Kalmar FF",
-            "liga": "Allsvenskan",
-            "svenskaFolket": {
-                "hemmalag": "55",
-                "kryss": "24",
-                "bortalag": "21"
-            },
-            "odds": {
-                "hemmalag": "2,55",
-                "kryss": "3,50",
-                "bortalag": "2,85"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "46.6%",
-                    "kryss": "23.1%",
-                    "bortalag": "29.0%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Malmö FF",
-            "bortalag": "IK Sirius",
-            "liga": "Allsvenskan",
-            "svenskaFolket": {
-                "hemmalag": "87",
-                "kryss": "10",
-                "bortalag": "3"
-            },
-            "odds": {
-                "hemmalag": "1,33",
-                "kryss": "5,65",
-                "bortalag": "9,60"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 0
-                },
-                "outcomePercentage": {
-                    "hemmalag": "59.0%",
-                    "kryss": "25.5%",
-                    "bortalag": "15.0%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Milan",
-            "bortalag": "Hellas Verona",
-            "liga": "Serie A",
-            "svenskaFolket": {
-                "hemmalag": "76",
-                "kryss": "17",
-                "bortalag": "7"
-            },
-            "odds": {
-                "hemmalag": "1,42",
-                "kryss": "4,85",
-                "bortalag": "7,10"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 0
-                },
-                "outcomePercentage": {
-                    "hemmalag": "57.7%",
-                    "kryss": "28.5%",
-                    "bortalag": "13.5%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Atalanta",
-            "bortalag": "Inter",
-            "liga": "Serie A",
-            "svenskaFolket": {
-                "hemmalag": "34",
-                "kryss": "29",
-                "bortalag": "37"
-            },
-            "odds": {
-                "hemmalag": "3,00",
-                "kryss": "3,85",
-                "bortalag": "2,17"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 3
-                },
-                "outcomePercentage": {
-                    "hemmalag": "10.4%",
-                    "kryss": "11.1%",
-                    "bortalag": "58.1%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Valencia",
-            "bortalag": "Real Madrid",
-            "liga": "LaLiga",
-            "svenskaFolket": {
-                "hemmalag": "7",
-                "kryss": "14",
-                "bortalag": "79"
-            },
-            "odds": {
-                "hemmalag": "6,20",
-                "kryss": "4,85",
-                "bortalag": "1,46"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 3
-                },
-                "outcomePercentage": {
-                    "hemmalag": "8.5%",
-                    "kryss": "11.9%",
-                    "bortalag": "68.9%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Real Sociedad",
-            "bortalag": "Granada CF",
-            "liga": "LaLiga",
-            "svenskaFolket": {
-                "hemmalag": "70",
-                "kryss": "18",
-                "bortalag": "12"
-            },
-            "odds": {
-                "hemmalag": "1,24",
-                "kryss": "5,85",
-                "bortalag": "13,40"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 3,
-                    "bortalag": 0
-                },
-                "outcomePercentage": {
-                    "hemmalag": "78.6%",
-                    "kryss": "7.9%",
-                    "bortalag": "2.7%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Bayer Leverkusen",
-            "bortalag": "Mönchengladbach",
-            "liga": "Bundesliga",
-            "svenskaFolket": {
-                "hemmalag": "43",
-                "kryss": "27",
-                "bortalag": "30"
-            },
-            "odds": {
-                "hemmalag": "2,55",
-                "kryss": "3,70",
-                "bortalag": "2,57"
+                "hemmalag": "3,50",
+                "kryss": "3,27",
+                "bortalag": "2,12"
             },
             "analys": {
                 "predictedScore": {
                     "hemmalag": 2,
-                    "bortalag": 1
+                    "bortalag": 0
                 },
                 "outcomePercentage": {
-                    "hemmalag": "54.3%",
-                    "kryss": "19.7%",
-                    "bortalag": "22.7%"
-                }
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Nederländerna",
+            "bortalag": "Spanien",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "30",
+                "kryss": "28",
+                "bortalag": "42"
+            },
+            "odds": {
+                "hemmalag": "2,92",
+                "kryss": "3,10",
+                "bortalag": "2,37"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Tyskland",
+            "bortalag": "Tjeckien",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "80",
+                "kryss": "14",
+                "bortalag": "6"
+            },
+            "odds": {
+                "hemmalag": "1,35",
+                "kryss": "5,00",
+                "bortalag": "7,00"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Belgien",
+            "bortalag": "Schweiz",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "67",
+                "kryss": "23",
+                "bortalag": "10"
+            },
+            "odds": {
+                "hemmalag": "1,63",
+                "kryss": "3,60",
+                "bortalag": "5,10"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Frankrike",
+            "bortalag": "Finland",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "92",
+                "kryss": "7",
+                "bortalag": "1"
+            },
+            "odds": {
+                "hemmalag": "1,13",
+                "kryss": "6,95",
+                "bortalag": "16,50"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Polen",
+            "bortalag": "Ukraina",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "52",
+                "kryss": "28",
+                "bortalag": "20"
+            },
+            "odds": {
+                "hemmalag": "2,34",
+                "kryss": "3,35",
+                "bortalag": "2,78"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Serbien",
+            "bortalag": "Skottland",
+            "liga": "EM-kval, Slutspel",
+            "svenskaFolket": {
+                "hemmalag": "62",
+                "kryss": "24",
+                "bortalag": "14"
+            },
+            "odds": {
+                "hemmalag": "1,64",
+                "kryss": "3,60",
+                "bortalag": "5,75"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Ungern",
+            "bortalag": "Island",
+            "liga": "EM-kval, Slutspel",
+            "svenskaFolket": {
+                "hemmalag": "47",
+                "kryss": "28",
+                "bortalag": "25"
+            },
+            "odds": {
+                "hemmalag": "2,40",
+                "kryss": "3,02",
+                "bortalag": "3,17"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Georgien",
+            "bortalag": "Nordmakedonien",
+            "liga": "EM-kval, Slutspel",
+            "svenskaFolket": {
+                "hemmalag": "38",
+                "kryss": "35",
+                "bortalag": "27"
+            },
+            "odds": {
+                "hemmalag": "2,72",
+                "kryss": "2,82",
+                "bortalag": "2,95"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Nordirland",
+            "bortalag": "Slovakien",
+            "liga": "EM-kval, Slutspel",
+            "svenskaFolket": {
+                "hemmalag": "34",
+                "kryss": "32",
+                "bortalag": "34"
+            },
+            "odds": {
+                "hemmalag": "2,78",
+                "kryss": "2,92",
+                "bortalag": "2,78"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "England",
+            "bortalag": "Irland",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "84",
+                "kryss": "13",
+                "bortalag": "3"
+            },
+            "odds": {
+                "hemmalag": "1,28",
+                "kryss": "4,95",
+                "bortalag": "9,50"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Wales",
+            "bortalag": "USA",
+            "liga": "Fotbollslandskamp",
+            "svenskaFolket": {
+                "hemmalag": "46",
+                "kryss": "26",
+                "bortalag": "28"
+            },
+            "odds": {
+                "hemmalag": "2,22",
+                "kryss": "3,03",
+                "bortalag": "3,27"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
+            }
+        },
+        {
+            "hemmalag": "Bolivia",
+            "bortalag": "Ecuador",
+            "liga": "Fotbolls-VM, kval Sydamerika",
+            "svenskaFolket": {
+                "hemmalag": "18",
+                "kryss": "26",
+                "bortalag": "56"
+            },
+            "odds": {
+                "hemmalag": "3,90",
+                "kryss": "3,35",
+                "bortalag": "1,84"
+            },
+            "analys": {
+                "predictedScore": {
+                    "hemmalag": 2,
+                    "bortalag": 0
+                },
+                "outcomePercentage": {
+                    "hemmalag": "67.8%",
+                    "kryss": "19.5%",
+                    "bortalag": "11.0%"
+                },
+                "poissonTable": [
+                    [
+                        6.93,
+                        13.98,
+                        14.09,
+                        9.47,
+                        4.77,
+                        1.93
+                    ],
+                    [
+                        4.53,
+                        9.13,
+                        9.2,
+                        6.18,
+                        3.12,
+                        1.26
+                    ],
+                    [
+                        1.48,
+                        2.98,
+                        3.0,
+                        2.02,
+                        1.02,
+                        0.41
+                    ],
+                    [
+                        0.32,
+                        0.65,
+                        0.66,
+                        0.44,
+                        0.22,
+                        0.09
+                    ],
+                    [
+                        0.05,
+                        0.1,
+                        0.11,
+                        0.07,
+                        0.04,
+                        0.01
+                    ],
+                    [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0
+                    ]
+                ]
             }
         }
     ],
-    "namn": "Europatipset v. 2020-45"
+    "namn": "Europatipset v. 2020-46"
 }

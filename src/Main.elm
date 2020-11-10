@@ -16,7 +16,9 @@ import Http exposing (request)
 import Json.Decode as D exposing (int)
 import Maybe exposing (Maybe)
 import Regex
-
+import Array2D exposing (Array2D)
+import Array2D.Json as GridDecoder exposing (decoder)
+import Array exposing (Array)
 
 
 -- MAIN
@@ -45,6 +47,7 @@ type alias Score =
 type alias Analys =
     { predictedScore : Score
     , outcomePercentage : MatchInfoHallare
+    , poissonTable : (List (List Float))
     }
 
 
@@ -85,8 +88,6 @@ init _ =
         , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
     )
-
-
 
 -- UPDATE
 
@@ -300,15 +301,47 @@ analyzeView rad =
                     , el [] <| text ("Odds" ++ " 1: " ++ rad.odds.hemmalag ++ " X: " ++ rad.odds.kryss ++ " 2: " ++ rad.odds.bortalag)
                     , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
                     ]
+                , column [width fill, height (px 300), padding 25, centerX, Font.center]
+                        <| headerRow 5
+                            :: List.indexedMap poissonTableRowView analys.poissonTable
                 ]
 
         Nothing ->
             text "Kunde inte analysera den här matchen. Försök igen senare."
 
+headerRow : Int -> Element msg
+headerRow goals =    
+    row [Background.color <| rgb255 160 150 250, width fill, height fill, centerY, centerX, Font.center]
+        <| el [width fill, centerX, centerY, Font.center] (text "Goals") ::   
+        List.map (\n -> 
+        el [width fill, centerX, centerY, Font.center]
+        <| (text (String.fromInt n))) (List.range 0 goals)
+
+poissonTableRowView : Int -> (List Float) -> Element msg
+poissonTableRowView index r =
+    row [width fill, height fill, centerY] <| 
+    el [width fill, height fill, Background.color <| rgb255 160 150 250] (el [width fill, centerX, centerY] (text (String.fromInt index))) ::
+    List.indexedMap (poissonTableColView index) r
+
+poissonTableColView : Int -> Int -> Float ->  Element msg
+poissonTableColView rowIndex colIndex col =
+    let
+        color =
+            if rowIndex > colIndex then
+                (rgb255 0 255 0)
+            else if rowIndex == colIndex then
+                (rgb255 255 255 255)
+            else
+                (rgb255 255 0 0)
+        
+    in    
+        (el [width fill, height fill, Background.color color, centerX, centerY, Font.center] <| 
+            el [centerY, centerX] <| text (String.fromFloat col ++ "%"))
+
 
 analysDecoder : D.Decoder Analys
 analysDecoder =
-    D.map2
+    D.map3
         Analys
         (D.field "predictedScore"
             (D.map2 Score
@@ -317,6 +350,7 @@ analysDecoder =
             )
         )
         (D.field "outcomePercentage" matchInfoHallareDecoder)
+        (D.field "poissonTable" (D.list (D.list D.float)))
 
 
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
