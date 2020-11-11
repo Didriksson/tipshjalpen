@@ -1,5 +1,8 @@
 module Main exposing (..)
 
+import Array exposing (Array)
+import Array2D exposing (Array2D)
+import Array2D.Json as GridDecoder exposing (decoder)
 import Browser
 import Debug exposing (log)
 import Dict exposing (Dict)
@@ -16,9 +19,7 @@ import Http exposing (request)
 import Json.Decode as D exposing (int)
 import Maybe exposing (Maybe)
 import Regex
-import Array2D exposing (Array2D)
-import Array2D.Json as GridDecoder exposing (decoder)
-import Array exposing (Array)
+
 
 
 -- MAIN
@@ -47,7 +48,7 @@ type alias Score =
 type alias Analys =
     { predictedScore : Score
     , outcomePercentage : MatchInfoHallare
-    , poissonTable : (List (List Float))
+    , poissonTable : List (List Float)
     }
 
 
@@ -56,7 +57,7 @@ type alias KupongRad =
     , away : String
     , liga : String
     , svenskaFolket : MatchInfoHallare
-    , odds : MatchInfoHallare
+    , odds : Maybe MatchInfoHallare
     , analys : Maybe Analys
     }
 
@@ -88,6 +89,8 @@ init _ =
         , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
     )
+
+
 
 -- UPDATE
 
@@ -142,8 +145,9 @@ update msg model =
                         Ok received ->
                             ( Success (PageState received Nothing), Cmd.none )
 
-                        Err _ ->
-                            ( Failure, Cmd.none )
+                        Err e ->
+                            Debug.log (Debug.toString e)
+                                ( Failure, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
@@ -183,7 +187,7 @@ kupongView : Kupong -> Element Msg
 kupongView kupong =
     column
         [ width fill
-        , Background.color <| rgb255 250 75 75
+        , Background.color <| rgb255 250 250 250
         , paddingEach { top = 20, left = 5, right = 5, bottom = 20 }
         , Border.rounded 10
         , spacing 10
@@ -214,15 +218,25 @@ kupongRadView rad =
                     , el [] (text (rad.svenskaFolket.bortalag ++ "%"))
                     ]
                 , column [ height fill ]
-                    [ el [] (text rad.odds.hemmalag)
-                    , el [] (text rad.odds.kryss)
-                    , el [] (text rad.odds.bortalag)
-                    ]
+                    []
                 ]
             , column [ height fill, width <| fillPortion 3 ] <|
                 predictedScoreView rad.analys
             ]
         ]
+
+
+oddsOrNothingView : Maybe MatchInfoHallare -> List (Element msg)
+oddsOrNothingView maybeOdds =
+    case maybeOdds of
+        Just odds ->
+            [ el [] (text odds.hemmalag)
+            , el [] (text odds.kryss)
+            , el [] (text odds.bortalag)
+            ]
+
+        Nothing ->
+            [ Element.none ]
 
 
 predictedScoreView : Maybe Analys -> List (Element msg)
@@ -298,45 +312,58 @@ analyzeView rad =
                 , column []
                     [ el [] <| text ("Predicted score: " ++ String.fromInt analys.predictedScore.hemmalag ++ " - " ++ String.fromInt analys.predictedScore.bortalag)
                     , el [] <| text ("Poissonanalys win/draw/win: " ++ analys.outcomePercentage.hemmalag ++ " " ++ analys.outcomePercentage.kryss ++ " " ++ analys.outcomePercentage.bortalag)
-                    , el [] <| text ("Odds" ++ " 1: " ++ rad.odds.hemmalag ++ " X: " ++ rad.odds.kryss ++ " 2: " ++ rad.odds.bortalag)
+                    , case rad.odds of
+                        Just o ->
+                            el [] <| text ("Odds" ++ " 1: " ++ o.hemmalag ++ " X: " ++ o.kryss ++ " 2: " ++ o.bortalag)
+
+                        Nothing ->
+                            Element.none
                     , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
                     ]
-                , column [width fill, height (px 300), padding 25, centerX, Font.center]
-                        <| headerRow 5
-                            :: List.indexedMap poissonTableRowView analys.poissonTable
+                , column [ width fill, height (px 300), padding 25, centerX, Font.center ] <|
+                    headerRow 5
+                        :: List.indexedMap poissonTableRowView analys.poissonTable
                 ]
 
         Nothing ->
             text "Kunde inte analysera den här matchen. Försök igen senare."
 
+
 headerRow : Int -> Element msg
-headerRow goals =    
-    row [Background.color <| rgb255 160 150 250, width fill, height fill, centerY, centerX, Font.center]
-        <| el [width fill, centerX, centerY, Font.center] (text "Goals") ::   
-        List.map (\n -> 
-        el [width fill, centerX, centerY, Font.center]
-        <| (text (String.fromInt n))) (List.range 0 goals)
+headerRow goals =
+    row [ Background.color <| rgb255 160 150 250, width fill, height fill, centerY, centerX, Font.center ] <|
+        el [ width fill, centerX, centerY, Font.center ] (text "Goals")
+            :: List.map
+                (\n ->
+                    el [ width fill, centerX, centerY, Font.center ] <|
+                        text (String.fromInt n)
+                )
+                (List.range 0 goals)
 
-poissonTableRowView : Int -> (List Float) -> Element msg
+
+poissonTableRowView : Int -> List Float -> Element msg
 poissonTableRowView index r =
-    row [width fill, height fill, centerY] <| 
-    el [width fill, height fill, Background.color <| rgb255 160 150 250] (el [width fill, centerX, centerY] (text (String.fromInt index))) ::
-    List.indexedMap (poissonTableColView index) r
+    row [ width fill, height fill, centerY ] <|
+        el [ width fill, height fill, Background.color <| rgb255 160 150 250 ] (el [ width fill, centerX, centerY ] (text (String.fromInt index)))
+            :: List.indexedMap (poissonTableColView index) r
 
-poissonTableColView : Int -> Int -> Float ->  Element msg
+
+poissonTableColView : Int -> Int -> Float -> Element msg
 poissonTableColView rowIndex colIndex col =
     let
         color =
             if rowIndex > colIndex then
-                (rgb255 0 255 0)
+                rgb255 0 255 0
+
             else if rowIndex == colIndex then
-                (rgb255 255 255 255)
+                rgb255 255 255 255
+
             else
-                (rgb255 255 0 0)
-        
-    in    
-        (el [width fill, height fill, Background.color color, centerX, centerY, Font.center] <| 
-            el [centerY, centerX] <| text (String.fromFloat col ++ "%"))
+                rgb255 255 0 0
+    in
+    el [ width fill, height fill, Background.color color, centerX, centerY, Font.center ] <|
+        el [ centerY, centerX ] <|
+            text (String.fromFloat col ++ "%")
 
 
 analysDecoder : D.Decoder Analys
@@ -355,7 +382,8 @@ analysDecoder =
 
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
 matchInfoHallareDecoder =
-    D.map3 MatchInfoHallare
+    D.map3
+        MatchInfoHallare
         (D.field "hemmalag" D.string)
         (D.field "kryss" D.string)
         (D.field "bortalag" D.string)
@@ -368,7 +396,7 @@ kupongRadDecoder =
         (D.field "bortalag" D.string)
         (D.field "liga" D.string)
         (D.field "svenskaFolket" matchInfoHallareDecoder)
-        (D.field "odds" matchInfoHallareDecoder)
+        (D.maybe (D.field "odds" matchInfoHallareDecoder))
         (D.maybe (D.field "analys" analysDecoder))
 
 
