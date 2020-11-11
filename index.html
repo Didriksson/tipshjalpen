@@ -6170,20 +6170,22 @@ var $author$project$Main$KupongRad = F6(
 	function (home, away, liga, svenskaFolket, odds, analys) {
 		return {analys: analys, away: away, home: home, liga: liga, odds: odds, svenskaFolket: svenskaFolket};
 	});
-var $author$project$Main$Analys = F2(
-	function (predictedScore, outcomePercentage) {
-		return {outcomePercentage: outcomePercentage, predictedScore: predictedScore};
+var $author$project$Main$Analys = F3(
+	function (predictedScore, outcomePercentage, poissonTable) {
+		return {outcomePercentage: outcomePercentage, poissonTable: poissonTable, predictedScore: predictedScore};
 	});
 var $author$project$Main$Score = F2(
 	function (hemmalag, bortalag) {
 		return {bortalag: bortalag, hemmalag: hemmalag};
 	});
+var $elm$json$Json$Decode$float = _Json_decodeFloat;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $author$project$Main$MatchInfoHallare = F3(
 	function (hemmalag, kryss, bortalag) {
 		return {bortalag: bortalag, hemmalag: hemmalag, kryss: kryss};
 	});
-var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Main$matchInfoHallareDecoder = A4(
 	$elm$json$Json$Decode$map3,
@@ -6191,8 +6193,8 @@ var $author$project$Main$matchInfoHallareDecoder = A4(
 	A2($elm$json$Json$Decode$field, 'hemmalag', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'kryss', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'bortalag', $elm$json$Json$Decode$string));
-var $author$project$Main$analysDecoder = A3(
-	$elm$json$Json$Decode$map2,
+var $author$project$Main$analysDecoder = A4(
+	$elm$json$Json$Decode$map3,
 	$author$project$Main$Analys,
 	A2(
 		$elm$json$Json$Decode$field,
@@ -6202,7 +6204,12 @@ var $author$project$Main$analysDecoder = A3(
 			$author$project$Main$Score,
 			A2($elm$json$Json$Decode$field, 'hemmalag', $elm$json$Json$Decode$int),
 			A2($elm$json$Json$Decode$field, 'bortalag', $elm$json$Json$Decode$int))),
-	A2($elm$json$Json$Decode$field, 'outcomePercentage', $author$project$Main$matchInfoHallareDecoder));
+	A2($elm$json$Json$Decode$field, 'outcomePercentage', $author$project$Main$matchInfoHallareDecoder),
+	A2(
+		$elm$json$Json$Decode$field,
+		'poissonTable',
+		$elm$json$Json$Decode$list(
+			$elm$json$Json$Decode$list($elm$json$Json$Decode$float))));
 var $elm$json$Json$Decode$map6 = _Json_map6;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$json$Json$Decode$maybe = function (decoder) {
@@ -6223,7 +6230,6 @@ var $author$project$Main$kupongRadDecoder = A7(
 	A2($elm$json$Json$Decode$field, 'odds', $author$project$Main$matchInfoHallareDecoder),
 	$elm$json$Json$Decode$maybe(
 		A2($elm$json$Json$Decode$field, 'analys', $author$project$Main$analysDecoder)));
-var $elm$json$Json$Decode$list = _Json_decodeList;
 var $author$project$Main$kupongDecoder = A3(
 	$elm$json$Json$Decode$map2,
 	$author$project$Main$Kupong,
@@ -12152,7 +12158,71 @@ var $mdgriffith$elm_ui$Internal$Model$Class = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
+var $mdgriffith$elm_ui$Internal$Flag$fontAlignment = $mdgriffith$elm_ui$Internal$Flag$flag(12);
+var $mdgriffith$elm_ui$Element$Font$center = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontAlignment, $mdgriffith$elm_ui$Internal$Style$classes.textCenter);
 var $mdgriffith$elm_ui$Element$Font$extraLight = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textExtraLight);
+var $mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
+var $mdgriffith$elm_ui$Internal$Model$asRow = $mdgriffith$elm_ui$Internal$Model$AsRow;
+var $mdgriffith$elm_ui$Element$row = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asRow,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentCenterY)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
+var $author$project$Main$headerRow = function (goals) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Background$color(
+				A3($mdgriffith$elm_ui$Element$rgb255, 160, 150, 250)),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$centerY,
+				$mdgriffith$elm_ui$Element$centerX,
+				$mdgriffith$elm_ui$Element$Font$center
+			]),
+		A2(
+			$elm$core$List$cons,
+			A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$centerY,
+						$mdgriffith$elm_ui$Element$Font$center
+					]),
+				$mdgriffith$elm_ui$Element$text('Goals')),
+			A2(
+				$elm$core$List$map,
+				function (n) {
+					return A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$centerY,
+								$mdgriffith$elm_ui$Element$Font$center
+							]),
+						$mdgriffith$elm_ui$Element$text(
+							$elm$core$String$fromInt(n)));
+				},
+				A2($elm$core$List$range, 0, goals))));
+};
 var $mdgriffith$elm_ui$Internal$Model$PaddingStyle = F5(
 	function (a, b, c, d, e) {
 		return {$: 'PaddingStyle', a: a, b: b, c: c, d: d, e: e};
@@ -12171,6 +12241,63 @@ var $mdgriffith$elm_ui$Element$padding = function (x) {
 			f,
 			f));
 };
+var $author$project$Main$poissonTableColView = F3(
+	function (rowIndex, colIndex, col) {
+		var color = (_Utils_cmp(rowIndex, colIndex) > 0) ? A3($mdgriffith$elm_ui$Element$rgb255, 0, 255, 0) : (_Utils_eq(rowIndex, colIndex) ? A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255) : A3($mdgriffith$elm_ui$Element$rgb255, 255, 0, 0));
+		return A2(
+			$mdgriffith$elm_ui$Element$el,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$Background$color(color),
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$centerY,
+					$mdgriffith$elm_ui$Element$Font$center
+				]),
+			A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[$mdgriffith$elm_ui$Element$centerY, $mdgriffith$elm_ui$Element$centerX]),
+				$mdgriffith$elm_ui$Element$text(
+					$elm$core$String$fromFloat(col) + '%')));
+	});
+var $author$project$Main$poissonTableRowView = F2(
+	function (index, r) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$centerY
+				]),
+			A2(
+				$elm$core$List$cons,
+				A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$Background$color(
+							A3($mdgriffith$elm_ui$Element$rgb255, 160, 150, 250))
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$centerY
+							]),
+						$mdgriffith$elm_ui$Element$text(
+							$elm$core$String$fromInt(index)))),
+				A2(
+					$elm$core$List$indexedMap,
+					$author$project$Main$poissonTableColView(index),
+					r)));
+	});
 var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
 var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
 	return A2(
@@ -12258,7 +12385,22 @@ var $author$project$Main$analyzeView = function (rad) {
 							$mdgriffith$elm_ui$Element$el,
 							_List_Nil,
 							$mdgriffith$elm_ui$Element$text('Svenska folket: ' + (rad.svenskaFolket.hemmalag + ('%' + (' ' + (rad.svenskaFolket.kryss + ('%' + (' ' + (rad.svenskaFolket.bortalag + '%')))))))))
-						]))
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$column,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+							$mdgriffith$elm_ui$Element$height(
+							$mdgriffith$elm_ui$Element$px(300)),
+							$mdgriffith$elm_ui$Element$padding(25),
+							$mdgriffith$elm_ui$Element$centerX,
+							$mdgriffith$elm_ui$Element$Font$center
+						]),
+					A2(
+						$elm$core$List$cons,
+						$author$project$Main$headerRow(5),
+						A2($elm$core$List$indexedMap, $author$project$Main$poissonTableRowView, analys.poissonTable)))
 				]));
 	} else {
 		return $mdgriffith$elm_ui$Element$text('Kunde inte analysera den här matchen. Försök igen senare.');
@@ -12338,26 +12480,6 @@ var $author$project$Main$predictedScoreView = function (maybeAnalys) {
 var $mdgriffith$elm_ui$Element$rgba255 = F4(
 	function (red, green, blue, a) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, a);
-	});
-var $mdgriffith$elm_ui$Internal$Model$AsRow = {$: 'AsRow'};
-var $mdgriffith$elm_ui$Internal$Model$asRow = $mdgriffith$elm_ui$Internal$Model$AsRow;
-var $mdgriffith$elm_ui$Element$row = F2(
-	function (attrs, children) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asRow,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.contentCenterY)),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
-						attrs))),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
 var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
 	function (a, b, c, d, e) {
