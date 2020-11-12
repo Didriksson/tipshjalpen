@@ -17,14 +17,15 @@ import Html.Attributes exposing (placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (request)
 import Json.Decode as D exposing (int)
+import Loading
+    exposing
+        ( LoaderType(..)
+        , defaultConfig
+        , render
+        )
 import Maybe exposing (Maybe)
 import Regex
-import Loading
-  exposing
-      ( LoaderType(..)
-      , defaultConfig
-      , render
-      )
+
 
 
 -- MAIN
@@ -90,7 +91,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Loading
     , Http.get
-        { url = "./oppenkupong.json"
+        { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
         , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
     )
@@ -285,24 +286,23 @@ view model =
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
-                    ,
-                    row [centerX, centerY] [ 
-                        el
-                        [ centerX
-                        , centerY
-                        , Font.color <| rgb255 0 0 0
-                        , Font.size 50
+                    , row [ centerX, centerY ]
+                        [ el
+                            [ centerX
+                            , centerY
+                            , Font.color <| rgb255 0 0 0
+                            , Font.size 50
+                            ]
+                            (text "Laddar in kupong")
+                        , el [ alignBottom ] <|
+                            Element.html
+                                (Loading.render
+                                    BouncingBalls
+                                    { defaultConfig | color = "#333" }
+                                    Loading.On
+                                )
                         ]
-                        (text "Laddar in kupong")
-                        ,el [alignBottom] <| Element.html (
-                            Loading.render
-                            BouncingBalls 
-                            { defaultConfig | color = "#333" }
-                            Loading.On
-                            )                       
-                  
-                        ]
-                     ]
+                    ]
 
         Success results ->
             layout [] <|
