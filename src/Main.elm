@@ -19,7 +19,12 @@ import Http exposing (request)
 import Json.Decode as D exposing (int)
 import Maybe exposing (Maybe)
 import Regex
-
+import Loading
+  exposing
+      ( LoaderType(..)
+      , defaultConfig
+      , render
+      )
 
 
 -- MAIN
@@ -280,14 +285,24 @@ view model =
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
-                    , el
+                    ,
+                    row [centerX, centerY] [ 
+                        el
                         [ centerX
                         , centerY
-                        , Font.color <| rgb255 255 255 255
+                        , Font.color <| rgb255 0 0 0
                         , Font.size 50
                         ]
-                        (text "Laddar in kupong...")
-                    ]
+                        (text "Laddar in kupong")
+                        ,el [alignBottom] <| Element.html (
+                            Loading.render
+                            BouncingBalls 
+                            { defaultConfig | color = "#333" }
+                            Loading.On
+                            )                       
+                  
+                        ]
+                     ]
 
         Success results ->
             layout [] <|
