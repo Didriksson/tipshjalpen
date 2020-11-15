@@ -1,343 +1,2020 @@
 {
     "matcher": [
         {
-            "hemmalag": "Manchester C",
-            "bortalag": "Liverpool",
-            "liga": "Premier League",
+            "hemmalag": "Belgien",
+            "bortalag": "England",
+            "liga": "UEFA Nations League, League A, Gr. 2",
             "svenskaFolket": {
-                "hemmalag": "43",
-                "kryss": "27",
-                "bortalag": "30"
+                "hemmalag": "47",
+                "kryss": "28",
+                "bortalag": "25"
             },
             "odds": {
-                "hemmalag": "1,96",
-                "kryss": "4,20",
-                "bortalag": "3,48"
+                "hemmalag": "2,24",
+                "kryss": "3,35",
+                "bortalag": "3,15"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 3,
-                    "bortalag": 2
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "35.4%",
-                    "kryss": "16.4%",
-                    "bortalag": "32.3%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "False"
                 }
             }
         },
         {
-            "hemmalag": "Arsenal",
-            "bortalag": "Aston Villa",
-            "liga": "Premier League",
+            "hemmalag": "Italien",
+            "bortalag": "Polen",
+            "liga": "UEFA Nations League, League A, Gr. 1",
             "svenskaFolket": {
-                "hemmalag": "70",
-                "kryss": "18",
+                "hemmalag": "63",
+                "kryss": "25",
                 "bortalag": "12"
             },
             "odds": {
-                "hemmalag": "1,73",
-                "kryss": "3,95",
-                "bortalag": "4,95"
+                "hemmalag": "1,67",
+                "kryss": "3,48",
+                "bortalag": "5,60"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 0,
-                    "bortalag": 1
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "0.0%",
-                    "kryss": "31.1%",
-                    "bortalag": "68.7%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "False"
                 }
             }
         },
         {
-            "hemmalag": "Leicester",
-            "bortalag": "Wolverhampton",
-            "liga": "Premier League",
-            "svenskaFolket": {
-                "hemmalag": "52",
-                "kryss": "27",
-                "bortalag": "21"
-            },
-            "odds": {
-                "hemmalag": "2,32",
-                "kryss": "3,30",
-                "bortalag": "3,33"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "36.9%",
-                    "kryss": "27.8%",
-                    "bortalag": "34.9%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Djurgården",
-            "bortalag": "AIK",
-            "liga": "Allsvenskan",
-            "svenskaFolket": {
-                "hemmalag": "38",
-                "kryss": "32",
-                "bortalag": "30"
-            },
-            "odds": {
-                "hemmalag": "2,15",
-                "kryss": "3,22",
-                "bortalag": "3,95"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 0
-                },
-                "outcomePercentage": {
-                    "hemmalag": "53.5%",
-                    "kryss": "26.0%",
-                    "bortalag": "20.0%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Varbergs BoIS",
-            "bortalag": "Hammarby",
-            "liga": "Allsvenskan",
-            "svenskaFolket": {
-                "hemmalag": "12",
-                "kryss": "21",
-                "bortalag": "67"
-            },
-            "odds": {
-                "hemmalag": "3,75",
-                "kryss": "3,85",
-                "bortalag": "1,98"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "42.2%",
-                    "kryss": "22.9%",
-                    "bortalag": "33.5%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Helsingborgs IF",
-            "bortalag": "IFK Göteborg",
-            "liga": "Allsvenskan",
+            "hemmalag": "Turkiet",
+            "bortalag": "Ryssland",
+            "liga": "UEFA Nations League, League B, Gr. 3",
             "svenskaFolket": {
                 "hemmalag": "35",
-                "kryss": "33",
-                "bortalag": "32"
+                "kryss": "31",
+                "bortalag": "34"
             },
             "odds": {
-                "hemmalag": "2,82",
-                "kryss": "3,37",
-                "bortalag": "2,63"
+                "hemmalag": "2,47",
+                "kryss": "3,22",
+                "bortalag": "2,88"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 0,
-                    "bortalag": 1
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "26.4%",
-                    "kryss": "30.8%",
-                    "bortalag": "42.7%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "False"
                 }
             }
         },
         {
-            "hemmalag": "Örebro SK",
-            "bortalag": "Kalmar FF",
-            "liga": "Allsvenskan",
+            "hemmalag": "Nederländerna",
+            "bortalag": "Bosnien Hercegovina",
+            "liga": "UEFA Nations League, League A, Gr. 1",
             "svenskaFolket": {
-                "hemmalag": "55",
-                "kryss": "24",
-                "bortalag": "21"
+                "hemmalag": "82",
+                "kryss": "13",
+                "bortalag": "5"
             },
             "odds": {
-                "hemmalag": "2,55",
-                "kryss": "3,50",
-                "bortalag": "2,85"
+                "hemmalag": "1,36",
+                "kryss": "4,70",
+                "bortalag": "8,55"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 1
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "46.6%",
-                    "kryss": "23.1%",
-                    "bortalag": "29.0%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "False"
                 }
             }
         },
         {
-            "hemmalag": "Malmö FF",
-            "bortalag": "IK Sirius",
-            "liga": "Allsvenskan",
+            "hemmalag": "Rumänien",
+            "bortalag": "Norge",
+            "liga": "UEFA Nations League, League B, Gr. 1",
+            "svenskaFolket": {
+                "hemmalag": "21",
+                "kryss": "29",
+                "bortalag": "50"
+            },
+            "odds": {
+                "hemmalag": "3,18",
+                "kryss": "3,38",
+                "bortalag": "2,20"
+            },
+            "analys": {
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                },
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "False"
+                }
+            }
+        },
+        {
+            "hemmalag": "Bulgarien",
+            "bortalag": "Finland",
+            "liga": "UEFA Nations League, League B, Gr. 4",
+            "svenskaFolket": {
+                "hemmalag": "23",
+                "kryss": "26",
+                "bortalag": "51"
+            },
+            "odds": {
+                "hemmalag": "3,90",
+                "kryss": "3,25",
+                "bortalag": "2,01"
+            },
+            "analys": {
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                },
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "True"
+                }
+            }
+        },
+        {
+            "hemmalag": "Wales",
+            "bortalag": "Irland",
+            "liga": "UEFA Nations League, League B, Gr. 4",
+            "svenskaFolket": {
+                "hemmalag": "61",
+                "kryss": "28",
+                "bortalag": "11"
+            },
+            "odds": {
+                "hemmalag": "2,03",
+                "kryss": "3,00",
+                "bortalag": "4,20"
+            },
+            "analys": {
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                },
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "True"
+                }
+            }
+        },
+        {
+            "hemmalag": "Ungern",
+            "bortalag": "Serbien",
+            "liga": "UEFA Nations League, League B, Gr. 3",
+            "svenskaFolket": {
+                "hemmalag": "42",
+                "kryss": "27",
+                "bortalag": "31"
+            },
+            "odds": {
+                "hemmalag": "3,28",
+                "kryss": "3,08",
+                "bortalag": "2,30"
+            },
+            "analys": {
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                },
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "True"
+                }
+            }
+        },
+        {
+            "hemmalag": "Danmark",
+            "bortalag": "Island",
+            "liga": "UEFA Nations League, League A, Gr. 2",
+            "svenskaFolket": {
+                "hemmalag": "82",
+                "kryss": "13",
+                "bortalag": "5"
+            },
+            "odds": {
+                "hemmalag": "1,27",
+                "kryss": "5,15",
+                "bortalag": "12,00"
+            },
+            "analys": {
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                },
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "False",
+                    "bortalag": "True"
+                }
+            }
+        },
+        {
+            "hemmalag": "Österrike",
+            "bortalag": "Nordirland",
+            "liga": "UEFA Nations League, League B, Gr. 1",
             "svenskaFolket": {
                 "hemmalag": "87",
                 "kryss": "10",
                 "bortalag": "3"
             },
             "odds": {
-                "hemmalag": "1,33",
-                "kryss": "5,65",
-                "bortalag": "9,60"
+                "hemmalag": "1,26",
+                "kryss": "5,35",
+                "bortalag": "11,80"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 0
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "59.0%",
-                    "kryss": "25.5%",
-                    "bortalag": "15.0%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "True",
+                    "bortalag": "True"
                 }
             }
         },
         {
-            "hemmalag": "Milan",
-            "bortalag": "Hellas Verona",
-            "liga": "Serie A",
+            "hemmalag": "Tjeckien",
+            "bortalag": "Israel",
+            "liga": "UEFA Nations League, League B, Gr. 2",
             "svenskaFolket": {
-                "hemmalag": "76",
+                "hemmalag": "73",
                 "kryss": "17",
-                "bortalag": "7"
+                "bortalag": "10"
             },
             "odds": {
-                "hemmalag": "1,42",
-                "kryss": "4,85",
-                "bortalag": "7,10"
+                "hemmalag": "1,49",
+                "kryss": "4,25",
+                "bortalag": "6,40"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 0
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "57.7%",
-                    "kryss": "28.5%",
-                    "bortalag": "13.5%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "True",
+                    "bortalag": "True"
                 }
             }
         },
         {
-            "hemmalag": "Atalanta",
-            "bortalag": "Inter",
-            "liga": "Serie A",
+            "hemmalag": "Georgien",
+            "bortalag": "Armenien",
+            "liga": "UEFA Nations League, League C, Gr. 2",
             "svenskaFolket": {
-                "hemmalag": "34",
-                "kryss": "29",
-                "bortalag": "37"
+                "hemmalag": "47",
+                "kryss": "33",
+                "bortalag": "20"
             },
             "odds": {
-                "hemmalag": "3,00",
-                "kryss": "3,85",
-                "bortalag": "2,17"
+                "hemmalag": "1,90",
+                "kryss": "3,30",
+                "bortalag": "4,25"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 3
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "10.4%",
-                    "kryss": "11.1%",
-                    "bortalag": "58.1%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "True",
+                    "bortalag": "True"
                 }
             }
         },
         {
-            "hemmalag": "Valencia",
-            "bortalag": "Real Madrid",
-            "liga": "LaLiga",
+            "hemmalag": "Belarus",
+            "bortalag": "Litauen",
+            "liga": "UEFA Nations League, League C, Gr. 4",
             "svenskaFolket": {
-                "hemmalag": "7",
-                "kryss": "14",
-                "bortalag": "79"
+                "hemmalag": "61",
+                "kryss": "26",
+                "bortalag": "13"
             },
             "odds": {
-                "hemmalag": "6,20",
-                "kryss": "4,85",
-                "bortalag": "1,46"
+                "hemmalag": "1,74",
+                "kryss": "3,35",
+                "bortalag": "5,25"
             },
             "analys": {
-                "predictedScore": {
-                    "hemmalag": 1,
-                    "bortalag": 3
+                "poisson": {
+                    "predictedScore": {
+                        "hemmalag": 2,
+                        "bortalag": 2
+                    },
+                    "outcomePercentage": {
+                        "hemmalag": "43.9",
+                        "kryss": "18.49",
+                        "bortalag": "37.57"
+                    },
+                    "poissonTable": [
+                        [
+                            0.74,
+                            1.88,
+                            2.39,
+                            2.03,
+                            1.29,
+                            0.66,
+                            0.28,
+                            0.1,
+                            0.03,
+                            0.01
+                        ],
+                        [
+                            1.75,
+                            4.45,
+                            5.66,
+                            4.8,
+                            3.05,
+                            1.55,
+                            0.66,
+                            0.24,
+                            0.08,
+                            0.02
+                        ],
+                        [
+                            2.07,
+                            5.25,
+                            6.68,
+                            5.67,
+                            3.6,
+                            1.83,
+                            0.78,
+                            0.28,
+                            0.09,
+                            0.03
+                        ],
+                        [
+                            1.63,
+                            4.14,
+                            5.26,
+                            4.46,
+                            2.84,
+                            1.44,
+                            0.61,
+                            0.22,
+                            0.07,
+                            0.02
+                        ],
+                        [
+                            0.96,
+                            2.44,
+                            3.11,
+                            2.63,
+                            1.68,
+                            0.85,
+                            0.36,
+                            0.13,
+                            0.04,
+                            0.01
+                        ],
+                        [
+                            0.45,
+                            1.15,
+                            1.47,
+                            1.25,
+                            0.79,
+                            0.4,
+                            0.17,
+                            0.06,
+                            0.02,
+                            0.01
+                        ],
+                        [
+                            0.18,
+                            0.45,
+                            0.58,
+                            0.49,
+                            0.31,
+                            0.16,
+                            0.07,
+                            0.02,
+                            0.01,
+                            0.0
+                        ],
+                        [
+                            0.06,
+                            0.15,
+                            0.2,
+                            0.17,
+                            0.11,
+                            0.05,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.02,
+                            0.05,
+                            0.06,
+                            0.05,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.01,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
                 },
-                "outcomePercentage": {
-                    "hemmalag": "8.5%",
-                    "kryss": "11.9%",
-                    "bortalag": "68.9%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Real Sociedad",
-            "bortalag": "Granada CF",
-            "liga": "LaLiga",
-            "svenskaFolket": {
-                "hemmalag": "70",
-                "kryss": "18",
-                "bortalag": "12"
-            },
-            "odds": {
-                "hemmalag": "1,24",
-                "kryss": "5,85",
-                "bortalag": "13,40"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 3,
-                    "bortalag": 0
-                },
-                "outcomePercentage": {
-                    "hemmalag": "78.6%",
-                    "kryss": "7.9%",
-                    "bortalag": "2.7%"
-                }
-            }
-        },
-        {
-            "hemmalag": "Bayer Leverkusen",
-            "bortalag": "Mönchengladbach",
-            "liga": "Bundesliga",
-            "svenskaFolket": {
-                "hemmalag": "43",
-                "kryss": "27",
-                "bortalag": "30"
-            },
-            "odds": {
-                "hemmalag": "2,55",
-                "kryss": "3,70",
-                "bortalag": "2,57"
-            },
-            "analys": {
-                "predictedScore": {
-                    "hemmalag": 2,
-                    "bortalag": 1
-                },
-                "outcomePercentage": {
-                    "hemmalag": "54.3%",
-                    "kryss": "19.7%",
-                    "bortalag": "22.7%"
+                "radforslag": {
+                    "hemmalag": "True",
+                    "kryss": "True",
+                    "bortalag": "True"
                 }
             }
         }
     ],
-    "namn": "Europatipset v. 2020-45"
+    "namn": "Europatipset v. 2020-46"
 }

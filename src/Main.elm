@@ -25,6 +25,8 @@ import Loading
         )
 import Maybe exposing (Maybe)
 import Regex
+import Element.Font exposing (center)
+import Element.Font exposing (alignLeft)
 
 
 
@@ -55,6 +57,7 @@ type alias Analys =
     { predictedScore : Score
     , outcomePercentage : MatchInfoHallare
     , poissonTable : List (List Float)
+    , radforslag : Maybe MatchInfoHallare
     }
 
 
@@ -91,7 +94,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Loading
     , Http.get
-        { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
+        { url = "./oppenkupong.json"
         , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
     )
@@ -104,6 +107,7 @@ init _ =
 type Msg
     = GotOppenKupong (Result Http.Error Kupong)
     | KlickadRad KupongRad
+    | SystemforslagChanged Bool
 
 
 {-| Returnerar det första värdet i listan som inte är Nothing.
@@ -158,6 +162,9 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        SystemforslagChanged b ->
+            (model, Cmd.none)
+
 
 
 -- SUBSCRIPTIONS
@@ -185,6 +192,7 @@ header =
             , centerY
             , Font.color <| rgb255 255 255 255
             , Font.size 50
+            
             ]
             (text "Tipshjälpen")
 
@@ -196,40 +204,45 @@ kupongView kupong =
         , Background.color <| rgb255 250 250 250
         , paddingEach { top = 20, left = 5, right = 5, bottom = 20 }
         , Border.rounded 10
-        , spacing 10
         ]
     <|
-        el [] (text kupong.name)
-            :: List.map kupongRadView kupong.rader
+        el [padding 10] (text kupong.name)
+            :: List.indexedMap kupongRadView kupong.rader
 
 
-kupongRadView : KupongRad -> Element Msg
-kupongRadView rad =
-    column
-        [ Element.Events.onClick (KlickadRad rad)
-        , width fill
+kupongRadView : Int -> KupongRad -> Element Msg
+kupongRadView index rad =
+    row
+        [ width fill
         , Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }
         , Border.color <| rgba255 192 192 192 0.3
         ]
-        [ el [ width fill, Font.size 10 ] (text rad.liga)
-        , row [ width fill ]
-            [ column [ height fill, width <| fillPortion 3 ]
+        [ 
+           row [Element.Events.onClick (KlickadRad rad), width fill][
+            el [Font.size 10] (text (String.fromInt (index + 1) ++ ".")),
+            column [width fill,padding 10] [
+            el [width fill, Font.size 10 ] (text rad.liga)
+            , row [width fill ]
+            [ column [height fill, width <| fillPortion 3 ]
                 [ el [ Element.alignTop ] (text rad.home)
                 , el [ Element.alignBottom ] (text rad.away)
                 ]
-            , row [ height fill, spacing 10, Font.size 12 ]
-                [ column [ height fill ]
+            , row [width fill, height fill, spacing 10, Font.size 12 ]
+                [ column [height fill]
                     [ el [] (text (rad.svenskaFolket.hemmalag ++ "%"))
                     , el [] (text (rad.svenskaFolket.kryss ++ "%"))
                     , el [] (text (rad.svenskaFolket.bortalag ++ "%"))
                     ]
-                , column [ height fill ]
-                    []
+                , column [height fill]
+                    <| oddsOrNothingView rad.odds
                 ]
-            , column [ height fill, width <| fillPortion 3 ] <|
-                predictedScoreView rad.analys
-            ]
-        ]
+            , column [alignRight, height fill, width <| fillPortion 3 ] <|
+                predictedScoreView rad.analys]
+            ]              
+           ],
+            el [height fill,width shrink, alignRight, centerY] (systemradRowView index rad)
+        ]   
+    
 
 
 oddsOrNothingView : Maybe MatchInfoHallare -> List (Element msg)
@@ -267,7 +280,7 @@ mainView state =
             , Border.color <| rgb255 0xE0 0xE0 0xE0
             ]
             [ kupongView state.kupong
-            ]
+            ]        
         , column [ width fill, height fill, spacing 10 ]
             [ case state.rad of
                 Nothing ->
@@ -278,6 +291,56 @@ mainView state =
             ]
         ]
 
+systemradRowView : Int -> KupongRad -> Element Msg
+systemradRowView matchnummer rad = 
+    case rad.analys of
+        Just analys ->
+            case analys.radforslag of
+                Just radforslag ->                    
+                    row [Border.color <| rgb255 0xc0 0xc0 0xc0, Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
+                        ,centerX, center, width fill, height fill, spacing 10, paddingXY 10 0] [
+                        el [centerX, height fill] <| (checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" (radforslag.hemmalag == "True")),
+                        el [centerX, height fill] <| (checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" (radforslag.kryss == "True")),
+                        el [centerX, height fill] <| (checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" (radforslag.bortalag == "True"))]
+                Nothing ->
+                    Element.none                
+        Nothing ->
+            Element.none
+    
+
+
+checkboxInput : String -> String -> Bool -> Element Msg
+checkboxInput labelText icontext kryssad =
+    Input.checkbox [centerX, width fill, height fill]
+                        {
+                            onChange = SystemforslagChanged,
+                            icon = checkboxIcon icontext,
+                            checked = kryssad,
+                            label = Input.labelHidden labelText
+                        }
+                
+
+
+checkboxIcon : String -> Bool -> Element msg 
+checkboxIcon labeltext isChecked = 
+    el 
+        [ width <| px 30
+        , height <| px 30
+        , centerY
+        , centerX
+        , padding 4
+        , Border.rounded 6
+        , Border.width 2
+        , Border.color <| rgb255 0xc0 0xc0 0xc0
+        ] <| 
+        el 
+            [ width fill
+            , height fill 
+            , Border.rounded 4
+            , Background.color <| if isChecked then rgb255 114 159 207 else rgb255 0xff 0xff 0xff
+            ] <| 
+            (text labeltext)         
+    
 
 view : Model -> Html Msg
 view model =
@@ -319,7 +382,7 @@ analyzeView : KupongRad -> Element Msg
 analyzeView rad =
     case rad.analys of
         Just analys ->
-            column [ width fill, height fill, spacing 10, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128 ]
+            column [ width fill, height fill, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128 ]
                 [ column [ centerX, Font.bold ]
                     [ el [ centerX, Font.extraLight ] <| text rad.liga
                     , el [ centerX ] <| text (rad.home ++ " - " ++ rad.away)
@@ -335,9 +398,9 @@ analyzeView rad =
                             Element.none
                     , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
                     ]
-                , column [ width fill, height (px 300), padding 25, centerX, Font.center ] <|
+                , column [ width fill, height (px 300), Font.center ] <|
                     headerRow 5
-                        :: List.indexedMap poissonTableRowView analys.poissonTable
+                        :: List.take 6 (List.indexedMap poissonTableRowView analys.poissonTable)
                 ]
 
         Nothing ->
@@ -346,8 +409,8 @@ analyzeView rad =
 
 headerRow : Int -> Element msg
 headerRow goals =
-    row [ Background.color <| rgb255 160 150 250, width fill, height fill, centerY, centerX, Font.center ] <|
-        el [ width fill, centerX, centerY, Font.center ] (text "Goals")
+    row [width fill, Background.color <| rgb255 160 150 250, height fill] <|
+        el [ width fill] (el [width fill, centerX, centerY ] <| text "Goals")
             :: List.map
                 (\n ->
                     el [ width fill, centerX, centerY, Font.center ] <|
@@ -358,9 +421,9 @@ headerRow goals =
 
 poissonTableRowView : Int -> List Float -> Element msg
 poissonTableRowView index r =
-    row [ width fill, height fill, centerY ] <|
-        el [ width fill, height fill, Background.color <| rgb255 160 150 250 ] (el [ width fill, centerX, centerY ] (text (String.fromInt index)))
-            :: List.indexedMap (poissonTableColView index) r
+    row [width fill, height fill] <|
+        el [ width fill, height fill, Background.color <| rgb255 160 150 250 ] (el [ width fill] (text (String.fromInt index)))
+            :: List.take 6 (List.indexedMap (poissonTableColView index) r)
 
 
 poissonTableColView : Int -> Int -> Float -> Element msg
@@ -376,23 +439,23 @@ poissonTableColView rowIndex colIndex col =
             else
                 rgb255 255 0 0
     in
-    el [ width fill, height fill, Background.color color, centerX, centerY, Font.center ] <|
+    el [ width fill, height fill, Background.color color] <|
         el [ centerY, centerX ] <|
             text (String.fromFloat col ++ "%")
 
 
 analysDecoder : D.Decoder Analys
-analysDecoder =
-    D.map3
+analysDecoder =     
+    (D.map4
         Analys
-        (D.field "predictedScore"
+        (D.field "poisson" (D.field "predictedScore"
             (D.map2 Score
                 (D.field "hemmalag" D.int)
                 (D.field "bortalag" D.int)
-            )
-        )
-        (D.field "outcomePercentage" matchInfoHallareDecoder)
-        (D.field "poissonTable" (D.list (D.list D.float)))
+            )))
+        (D.field "poisson" (D.field "outcomePercentage" matchInfoHallareDecoder))
+        (D.field "poisson" (D.field "poissonTable" (D.list (D.list D.float))))
+        (optionalField "radforslag" matchInfoHallareDecoder))
 
 
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
@@ -411,9 +474,8 @@ kupongRadDecoder =
         (D.field "bortalag" D.string)
         (D.field "liga" D.string)
         (D.field "svenskaFolket" matchInfoHallareDecoder)
-        (D.maybe (D.field "odds" matchInfoHallareDecoder))
-        (D.maybe (D.field "analys" analysDecoder))
-
+        (optionalField "odds" matchInfoHallareDecoder)
+        (optionalField "analys" analysDecoder)
 
 kupongDecoder : D.Decoder Kupong
 kupongDecoder =
@@ -421,3 +483,21 @@ kupongDecoder =
         Kupong
         (D.field "namn" D.string)
         (D.field "matcher" (D.list kupongRadDecoder))
+
+
+optionalField : String -> D.Decoder a -> D.Decoder (Maybe a)
+optionalField fieldName decoder =
+    D.value
+        |> D.andThen
+            (\value ->
+                case D.decodeValue (D.field fieldName D.value) value of
+                    Ok fieldValue ->
+                        case D.decodeValue decoder fieldValue of
+                            Ok a ->
+                                D.succeed (Just a)
+                            Err errorMessage ->
+                                D.fail (D.errorToString errorMessage)
+
+                    Err err ->
+                        D.succeed Nothing
+            )
