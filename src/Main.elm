@@ -10,7 +10,7 @@ import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events exposing (..)
-import Element.Font as Font
+import Element.Font as Font exposing (alignLeft, center)
 import Element.Input as Input
 import Html exposing (Attribute, Html, button, div, header, img, input, li, p, span, ul)
 import Html.Attributes exposing (placeholder, value)
@@ -25,8 +25,6 @@ import Loading
         )
 import Maybe exposing (Maybe)
 import Regex
-import Element.Font exposing (center)
-import Element.Font exposing (alignLeft)
 
 
 
@@ -94,7 +92,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( Loading
     , Http.get
-        { url = "./oppenkupong.json"
+        { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
         , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
     )
@@ -163,7 +161,7 @@ update msg model =
                     ( model, Cmd.none )
 
         SystemforslagChanged b ->
-            (model, Cmd.none)
+            ( model, Cmd.none )
 
 
 
@@ -192,7 +190,6 @@ header =
             , centerY
             , Font.color <| rgb255 255 255 255
             , Font.size 50
-            
             ]
             (text "Tipshjälpen")
 
@@ -206,7 +203,7 @@ kupongView kupong =
         , Border.rounded 10
         ]
     <|
-        el [padding 10] (text kupong.name)
+        el [ padding 10 ] (text kupong.name)
             :: List.indexedMap kupongRadView kupong.rader
 
 
@@ -217,32 +214,44 @@ kupongRadView index rad =
         , Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }
         , Border.color <| rgba255 192 192 192 0.3
         ]
-        [ 
-           row [Element.Events.onClick (KlickadRad rad), width fill][
-            el [Font.size 10] (text (String.fromInt (index + 1) ++ ".")),
-            column [width fill,padding 10] [
-            el [width fill, Font.size 10 ] (text rad.liga)
-            , row [width fill ]
-            [ column [height fill, width <| fillPortion 3 ]
-                [ el [ Element.alignTop ] (text rad.home)
-                , el [ Element.alignBottom ] (text rad.away)
-                ]
-            , row [width fill, height fill, spacing 10, Font.size 12 ]
-                [ column [height fill]
-                    [ el [] (text (rad.svenskaFolket.hemmalag ++ "%"))
-                    , el [] (text (rad.svenskaFolket.kryss ++ "%"))
-                    , el [] (text (rad.svenskaFolket.bortalag ++ "%"))
+        [ Input.button
+            [ width fill
+            , Background.color <| rgb255 255 255 255
+            , Element.focused
+                [ Background.color <| rgb255 192 192 192 ]
+            ]
+            { onPress = Just (KlickadRad rad)
+            , label = matchinfoView index rad
+            }
+        , el [ height fill, width shrink, alignRight, centerY ] (systemradRowView index rad)
+        ]
+
+
+matchinfoView : Int -> KupongRad -> Element Msg
+matchinfoView index rad =
+    row [ width fill ]
+        [ el [ Font.size 10 ] (text (String.fromInt (index + 1) ++ "."))
+        , column [ width fill, padding 10 ]
+            [ el [ width fill, Font.size 10 ] (text rad.liga)
+            , row [ width fill ]
+                [ column [ height fill, width <| fillPortion 3 ]
+                    [ el [ Element.alignTop ] (text rad.home)
+                    , el [ Element.alignBottom ] (text rad.away)
                     ]
-                , column [height fill]
-                    <| oddsOrNothingView rad.odds
+                , row [ width fill, height fill, spacing 10, Font.size 12 ]
+                    [ column [ height fill ]
+                        [ el [] (text (rad.svenskaFolket.hemmalag ++ "%"))
+                        , el [] (text (rad.svenskaFolket.kryss ++ "%"))
+                        , el [] (text (rad.svenskaFolket.bortalag ++ "%"))
+                        ]
+                    , column [ height fill ] <|
+                        oddsOrNothingView rad.odds
+                    ]
+                , column [ alignRight, height fill, width <| fillPortion 3 ] <|
+                    predictedScoreView rad.analys
                 ]
-            , column [alignRight, height fill, width <| fillPortion 3 ] <|
-                predictedScoreView rad.analys]
-            ]              
-           ],
-            el [height fill,width shrink, alignRight, centerY] (systemradRowView index rad)
-        ]   
-    
+            ]
+        ]
 
 
 oddsOrNothingView : Maybe MatchInfoHallare -> List (Element msg)
@@ -278,9 +287,10 @@ mainView state =
             , centerY
             , spacing 10
             , Border.color <| rgb255 0xE0 0xE0 0xE0
+            , alignTop
             ]
             [ kupongView state.kupong
-            ]        
+            ]
         , column [ width fill, height fill, spacing 10 ]
             [ case state.rad of
                 Nothing ->
@@ -291,39 +301,48 @@ mainView state =
             ]
         ]
 
+
 systemradRowView : Int -> KupongRad -> Element Msg
-systemradRowView matchnummer rad = 
+systemradRowView matchnummer rad =
     case rad.analys of
         Just analys ->
             case analys.radforslag of
-                Just radforslag ->                    
-                    row [Border.color <| rgb255 0xc0 0xc0 0xc0, Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
-                        ,centerX, center, width fill, height fill, spacing 10, paddingXY 10 0] [
-                        el [centerX, height fill] <| (checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" (radforslag.hemmalag == "True")),
-                        el [centerX, height fill] <| (checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" (radforslag.kryss == "True")),
-                        el [centerX, height fill] <| (checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" (radforslag.bortalag == "True"))]
+                Just radforslag ->
+                    row
+                        [ Border.color <| rgb255 0xC0 0xC0 0xC0
+                        , Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
+                        , centerX
+                        , center
+                        , width fill
+                        , height fill
+                        , spacing 10
+                        , paddingXY 10 0
+                        ]
+                        [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" (radforslag.hemmalag == "True")
+                        , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" (radforslag.kryss == "True")
+                        , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" (radforslag.bortalag == "True")
+                        ]
+
                 Nothing ->
-                    Element.none                
+                    Element.none
+
         Nothing ->
             Element.none
-    
 
 
 checkboxInput : String -> String -> Bool -> Element Msg
 checkboxInput labelText icontext kryssad =
-    Input.checkbox [centerX, width fill, height fill]
-                        {
-                            onChange = SystemforslagChanged,
-                            icon = checkboxIcon icontext,
-                            checked = kryssad,
-                            label = Input.labelHidden labelText
-                        }
-                
+    Input.checkbox [ centerX, width fill, height fill ]
+        { onChange = SystemforslagChanged
+        , icon = checkboxIcon icontext
+        , checked = kryssad
+        , label = Input.labelHidden labelText
+        }
 
 
-checkboxIcon : String -> Bool -> Element msg 
-checkboxIcon labeltext isChecked = 
-    el 
+checkboxIcon : String -> Bool -> Element msg
+checkboxIcon labeltext isChecked =
+    el
         [ width <| px 30
         , height <| px 30
         , centerY
@@ -331,16 +350,23 @@ checkboxIcon labeltext isChecked =
         , padding 4
         , Border.rounded 6
         , Border.width 2
-        , Border.color <| rgb255 0xc0 0xc0 0xc0
-        ] <| 
-        el 
+        , Border.color <| rgb255 0xC0 0xC0 0xC0
+        ]
+    <|
+        el
             [ width fill
-            , height fill 
+            , height fill
             , Border.rounded 4
-            , Background.color <| if isChecked then rgb255 114 159 207 else rgb255 0xff 0xff 0xff
-            ] <| 
-            (text labeltext)         
-    
+            , Background.color <|
+                if isChecked then
+                    rgb255 114 159 207
+
+                else
+                    rgb255 0xFF 0xFF 0xFF
+            ]
+        <|
+            text labeltext
+
 
 view : Model -> Html Msg
 view model =
@@ -409,8 +435,8 @@ analyzeView rad =
 
 headerRow : Int -> Element msg
 headerRow goals =
-    row [width fill, Background.color <| rgb255 160 150 250, height fill] <|
-        el [ width fill] (el [width fill, centerX, centerY ] <| text "Goals")
+    row [ width fill, Background.color <| rgb255 160 150 250, height fill ] <|
+        el [ width fill ] (el [ width fill, centerX, centerY ] <| text "Goals")
             :: List.map
                 (\n ->
                     el [ width fill, centerX, centerY, Font.center ] <|
@@ -421,8 +447,8 @@ headerRow goals =
 
 poissonTableRowView : Int -> List Float -> Element msg
 poissonTableRowView index r =
-    row [width fill, height fill] <|
-        el [ width fill, height fill, Background.color <| rgb255 160 150 250 ] (el [ width fill] (text (String.fromInt index)))
+    row [ width fill, height fill ] <|
+        el [ width fill, height fill, Background.color <| rgb255 160 150 250 ] (el [ width fill ] (text (String.fromInt index)))
             :: List.take 6 (List.indexedMap (poissonTableColView index) r)
 
 
@@ -439,23 +465,26 @@ poissonTableColView rowIndex colIndex col =
             else
                 rgb255 255 0 0
     in
-    el [ width fill, height fill, Background.color color] <|
+    el [ width fill, height fill, Background.color color ] <|
         el [ centerY, centerX ] <|
             text (String.fromFloat col ++ "%")
 
 
 analysDecoder : D.Decoder Analys
-analysDecoder =     
-    (D.map4
+analysDecoder =
+    D.map4
         Analys
-        (D.field "poisson" (D.field "predictedScore"
-            (D.map2 Score
-                (D.field "hemmalag" D.int)
-                (D.field "bortalag" D.int)
-            )))
+        (D.field "poisson"
+            (D.field "predictedScore"
+                (D.map2 Score
+                    (D.field "hemmalag" D.int)
+                    (D.field "bortalag" D.int)
+                )
+            )
+        )
         (D.field "poisson" (D.field "outcomePercentage" matchInfoHallareDecoder))
         (D.field "poisson" (D.field "poissonTable" (D.list (D.list D.float))))
-        (optionalField "radforslag" matchInfoHallareDecoder))
+        (optionalField "radforslag" matchInfoHallareDecoder)
 
 
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
@@ -477,6 +506,7 @@ kupongRadDecoder =
         (optionalField "odds" matchInfoHallareDecoder)
         (optionalField "analys" analysDecoder)
 
+
 kupongDecoder : D.Decoder Kupong
 kupongDecoder =
     D.map2
@@ -495,6 +525,7 @@ optionalField fieldName decoder =
                         case D.decodeValue decoder fieldValue of
                             Ok a ->
                                 D.succeed (Just a)
+
                             Err errorMessage ->
                                 D.fail (D.errorToString errorMessage)
 
