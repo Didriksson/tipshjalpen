@@ -276,7 +276,20 @@ predictedScoreView maybeAnalys =
             ]
 
         Nothing ->
-            [ el [] Element.none ]
+            [ Input.button
+                [ Element.alignRight
+                , Font.color <| rgb255 252 3 73
+                , Font.extraBold
+                , Font.size 35
+                , mouseOver
+                    [ Background.color <| rgb255 0xFF 0xFF 0xFF, Font.color <| rgb255 0 0 0 ]
+                , focused
+                    [ Border.shadow { offset = ( 4, 4 ), size = 3, blur = 10, color = rgb255 114 159 207 } ]
+                ]
+                { onPress = Nothing
+                , label = el [] (text "!")
+                }
+            ]
 
 
 mainView : PageState -> Element Msg
@@ -302,32 +315,41 @@ mainView state =
         ]
 
 
+emptysystemRad : Int -> List (Element Msg)
+emptysystemRad matchnummer =
+    [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" False
+    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" False
+    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" False
+    ]
+
+
 systemradRowView : Int -> KupongRad -> Element Msg
 systemradRowView matchnummer rad =
-    case rad.analys of
-        Just analys ->
-            case analys.radforslag of
-                Just radforslag ->
-                    row
-                        [ Border.color <| rgb255 0xC0 0xC0 0xC0
-                        , Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
-                        , centerX
-                        , center
-                        , width fill
-                        , height fill
-                        , spacing 10
-                        , paddingXY 10 0
-                        ]
+    row
+        [ Border.color <| rgb255 0xC0 0xC0 0xC0
+        , Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
+        , centerX
+        , center
+        , width fill
+        , height fill
+        , spacing 10
+        , paddingXY 10 0
+        ]
+    <|
+        case rad.analys of
+            Just analys ->
+                case analys.radforslag of
+                    Just radforslag ->
                         [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" (radforslag.hemmalag == "True")
                         , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" (radforslag.kryss == "True")
                         , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" (radforslag.bortalag == "True")
                         ]
 
-                Nothing ->
-                    Element.none
+                    _ ->
+                        emptysystemRad matchnummer
 
-        Nothing ->
-            Element.none
+            _ ->
+                emptysystemRad matchnummer
 
 
 checkboxInput : String -> String -> Bool -> Element Msg
