@@ -6286,9 +6286,9 @@ var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$Failure = {$: 'Failure'};
-var $author$project$Main$PageState = F2(
-	function (kupong, rad) {
-		return {kupong: kupong, rad: rad};
+var $author$project$Main$PageState = F3(
+	function (kupong, rad, radforslag) {
+		return {kupong: kupong, rad: rad, radforslag: radforslag};
 	});
 var $author$project$Main$Success = function (a) {
 	return {$: 'Success', a: a};
@@ -6296,10 +6296,31 @@ var $author$project$Main$Success = function (a) {
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$http$Http$post = function (r) {
+	return $elm$http$Http$request(
+		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
+};
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
 var $elm$core$Debug$toString = _Debug_toString;
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
+			case 'SkickaMedUppdateratRadforslag':
+				var forslag = msg.a;
+				return _Utils_Tuple2(
+					$author$project$Main$Loading,
+					$elm$http$Http$post(
+						{
+							body: $elm$http$Http$emptyBody,
+							expect: A2($elm$http$Http$expectJson, $author$project$Main$GotOppenKupong, $author$project$Main$kupongDecoder),
+							url: 'https://tipshjalpen.herokuapp.com/hamtaKupong'
+						}));
 			case 'KlickadRad':
 				var klickadRad = msg.a;
 				if (model.$ === 'Success') {
@@ -6322,7 +6343,7 @@ var $author$project$Main$update = F2(
 						var received = result.a;
 						return _Utils_Tuple2(
 							$author$project$Main$Success(
-								A2($author$project$Main$PageState, received, $elm$core$Maybe$Nothing)),
+								A3($author$project$Main$PageState, received, $elm$core$Maybe$Nothing, $elm$core$Dict$empty)),
 							$elm$core$Platform$Cmd$none);
 					} else {
 						var e = result.a;
@@ -6335,8 +6356,39 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			default:
-				var b = msg.a;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				var tecken = msg.a;
+				var match = msg.b;
+				var b = msg.c;
+				if (model.$ === 'Success') {
+					var state = model.a;
+					var uppdateradRad = function () {
+						var _v5 = A2($elm$core$Dict$get, match, state.radforslag);
+						if (_v5.$ === 'Just') {
+							var ursprunligt = _v5.a;
+							if (!b) {
+								return A3($elm$core$String$replace, tecken, '', ursprunligt);
+							} else {
+								return _Utils_ap(ursprunligt, tecken);
+							}
+						} else {
+							if (b) {
+								return tecken;
+							} else {
+								return '';
+							}
+						}
+					}();
+					return _Utils_Tuple2(
+						$author$project$Main$Success(
+							_Utils_update(
+								state,
+								{
+									radforslag: $elm$core$String$isEmpty(uppdateradRad) ? A2($elm$core$Dict$remove, match, state.radforslag) : A3($elm$core$Dict$insert, match, uppdateradRad, state.radforslag)
+								})),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 		}
 	});
 var $perzanko$elm_loading$Loading$BouncingBalls = {$: 'BouncingBalls'};
@@ -12594,8 +12646,8 @@ var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 			'border-color',
 			clr));
 };
-var $author$project$Main$KlickadRad = function (a) {
-	return {$: 'KlickadRad', a: a};
+var $author$project$Main$SkickaMedUppdateratRadforslag = function (a) {
+	return {$: 'SkickaMedUppdateratRadforslag', a: a};
 };
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
@@ -12880,6 +12932,9 @@ var $mdgriffith$elm_ui$Element$focused = function (decs) {
 			$mdgriffith$elm_ui$Internal$Model$Focus,
 			$mdgriffith$elm_ui$Internal$Model$unwrapDecorations(decs)));
 };
+var $author$project$Main$KlickadRad = function (a) {
+	return {$: 'KlickadRad', a: a};
+};
 var $mdgriffith$elm_ui$Element$fillPortion = $mdgriffith$elm_ui$Internal$Model$Fill;
 var $author$project$Main$oddsOrNothingView = function (maybeOdds) {
 	if (maybeOdds.$ === 'Just') {
@@ -13141,9 +13196,10 @@ var $mdgriffith$elm_ui$Element$rgba255 = F4(
 	function (red, green, blue, a) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, a);
 	});
-var $author$project$Main$SystemforslagChanged = function (a) {
-	return {$: 'SystemforslagChanged', a: a};
-};
+var $author$project$Main$SystemforslagChanged = F3(
+	function (a, b, c) {
+		return {$: 'SystemforslagChanged', a: a, b: b, c: c};
+	});
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
 var $mdgriffith$elm_ui$Internal$Model$LivePolite = {$: 'LivePolite'};
@@ -13355,8 +13411,8 @@ var $mdgriffith$elm_ui$Element$Input$HiddenLabel = function (a) {
 	return {$: 'HiddenLabel', a: a};
 };
 var $mdgriffith$elm_ui$Element$Input$labelHidden = $mdgriffith$elm_ui$Element$Input$HiddenLabel;
-var $author$project$Main$checkboxInput = F3(
-	function (labelText, icontext, kryssad) {
+var $author$project$Main$checkboxInput = F4(
+	function (labelText, icontext, matchnummer, kryssad) {
 		return A2(
 			$mdgriffith$elm_ui$Element$Input$checkbox,
 			_List_fromArray(
@@ -13369,7 +13425,7 @@ var $author$project$Main$checkboxInput = F3(
 				checked: kryssad,
 				icon: $author$project$Main$checkboxIcon(icontext),
 				label: $mdgriffith$elm_ui$Element$Input$labelHidden(labelText),
-				onChange: $author$project$Main$SystemforslagChanged
+				onChange: A2($author$project$Main$SystemforslagChanged, icontext, matchnummer)
 			});
 	});
 var $author$project$Main$emptysystemRad = function (matchnummer) {
@@ -13382,10 +13438,11 @@ var $author$project$Main$emptysystemRad = function (matchnummer) {
 					$mdgriffith$elm_ui$Element$centerX,
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 				]),
-			A3(
+			A4(
 				$author$project$Main$checkboxInput,
 				'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Etta'),
 				'1',
+				matchnummer,
 				false)),
 			A2(
 			$mdgriffith$elm_ui$Element$el,
@@ -13394,10 +13451,11 @@ var $author$project$Main$emptysystemRad = function (matchnummer) {
 					$mdgriffith$elm_ui$Element$centerX,
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 				]),
-			A3(
+			A4(
 				$author$project$Main$checkboxInput,
 				'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Kryss'),
 				'x',
+				matchnummer,
 				false)),
 			A2(
 			$mdgriffith$elm_ui$Element$el,
@@ -13406,10 +13464,11 @@ var $author$project$Main$emptysystemRad = function (matchnummer) {
 					$mdgriffith$elm_ui$Element$centerX,
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 				]),
-			A3(
+			A4(
 				$author$project$Main$checkboxInput,
 				'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Tvåa'),
 				'2',
+				matchnummer,
 				false))
 		]);
 };
@@ -13471,8 +13530,8 @@ var $mdgriffith$elm_ui$Element$Border$widthEach = function (_v0) {
 			bottom,
 			left));
 };
-var $author$project$Main$systemradRowView = F2(
-	function (matchnummer, rad) {
+var $author$project$Main$systemradRowView = F3(
+	function (matchnummer, rad, forslag) {
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
@@ -13489,61 +13548,110 @@ var $author$project$Main$systemradRowView = F2(
 					A2($mdgriffith$elm_ui$Element$paddingXY, 10, 0)
 				]),
 			function () {
-				var _v0 = rad.analys;
-				if (_v0.$ === 'Just') {
-					var analys = _v0.a;
-					var _v1 = analys.radforslag;
+				if (forslag.$ === 'Just') {
+					var f = forslag.a;
+					return _List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$centerX,
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+								]),
+							A4(
+								$author$project$Main$checkboxInput,
+								'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Etta'),
+								'1',
+								matchnummer,
+								A2($elm$core$String$contains, '1', f))),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$centerX,
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+								]),
+							A4(
+								$author$project$Main$checkboxInput,
+								'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Kryss'),
+								'x',
+								matchnummer,
+								A2($elm$core$String$contains, 'x', f))),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$centerX,
+									$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+								]),
+							A4(
+								$author$project$Main$checkboxInput,
+								'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Tvåa'),
+								'2',
+								matchnummer,
+								A2($elm$core$String$contains, '2', f)))
+						]);
+				} else {
+					var _v1 = rad.analys;
 					if (_v1.$ === 'Just') {
-						var radforslag = _v1.a;
-						return _List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$centerX,
-										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-									]),
-								A3(
-									$author$project$Main$checkboxInput,
-									'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Etta'),
-									'1',
-									radforslag.hemmalag === 'True')),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$centerX,
-										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-									]),
-								A3(
-									$author$project$Main$checkboxInput,
-									'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Kryss'),
-									'x',
-									radforslag.kryss === 'True')),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$centerX,
-										$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
-									]),
-								A3(
-									$author$project$Main$checkboxInput,
-									'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Tvåa'),
-									'2',
-									radforslag.bortalag === 'True'))
-							]);
+						var analys = _v1.a;
+						var _v2 = analys.radforslag;
+						if (_v2.$ === 'Just') {
+							var radforslag = _v2.a;
+							return _List_fromArray(
+								[
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$centerX,
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+										]),
+									A4(
+										$author$project$Main$checkboxInput,
+										'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Etta'),
+										'1',
+										matchnummer,
+										radforslag.hemmalag === 'True')),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$centerX,
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+										]),
+									A4(
+										$author$project$Main$checkboxInput,
+										'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Kryss'),
+										'x',
+										matchnummer,
+										radforslag.kryss === 'True')),
+									A2(
+									$mdgriffith$elm_ui$Element$el,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$centerX,
+											$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+										]),
+									A4(
+										$author$project$Main$checkboxInput,
+										'Match ' + ($elm$core$String$fromInt(matchnummer) + ' - Tvåa'),
+										'2',
+										matchnummer,
+										radforslag.bortalag === 'True'))
+								]);
+						} else {
+							return $author$project$Main$emptysystemRad(matchnummer);
+						}
 					} else {
 						return $author$project$Main$emptysystemRad(matchnummer);
 					}
-				} else {
-					return $author$project$Main$emptysystemRad(matchnummer);
 				}
 			}());
 	});
-var $author$project$Main$kupongRadView = F2(
-	function (index, rad) {
+var $author$project$Main$kupongRadView = F3(
+	function (index, rad, radforslag) {
 		return A2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
@@ -13584,7 +13692,11 @@ var $author$project$Main$kupongRadView = F2(
 							$mdgriffith$elm_ui$Element$alignRight,
 							$mdgriffith$elm_ui$Element$centerY
 						]),
-					A2($author$project$Main$systemradRowView, index, rad))
+					A3(
+						$author$project$Main$systemradRowView,
+						index,
+						rad,
+						A2($elm$core$Dict$get, index, radforslag)))
 				]));
 	});
 var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
@@ -13621,7 +13733,7 @@ var $mdgriffith$elm_ui$Element$paddingEach = function (_v0) {
 				left));
 	}
 };
-var $author$project$Main$kupongView = function (kupong) {
+var $author$project$Main$kupongView = function (state) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
@@ -13636,13 +13748,54 @@ var $author$project$Main$kupongView = function (kupong) {
 		A2(
 			$elm$core$List$cons,
 			A2(
-				$mdgriffith$elm_ui$Element$el,
+				$mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$padding(10)
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 					]),
-				$mdgriffith$elm_ui$Element$text(kupong.name)),
-			A2($elm$core$List$indexedMap, $author$project$Main$kupongRadView, kupong.rader)));
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$padding(10),
+								$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+							]),
+						$mdgriffith$elm_ui$Element$text(state.kupong.name)),
+						A2(
+						$mdgriffith$elm_ui$Element$Input$button,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$alignRight,
+								$mdgriffith$elm_ui$Element$Background$color(
+								A3($mdgriffith$elm_ui$Element$rgb255, 255, 255, 255)),
+								$mdgriffith$elm_ui$Element$focused(
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Background$color(
+										A3($mdgriffith$elm_ui$Element$rgb255, 192, 192, 192))
+									]))
+							]),
+						{
+							label: A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Border$rounded(16)
+									]),
+								$mdgriffith$elm_ui$Element$text('Uppdatera')),
+							onPress: $elm$core$Maybe$Just(
+								$author$project$Main$SkickaMedUppdateratRadforslag(state))
+						})
+					])),
+			A2(
+				$elm$core$List$indexedMap,
+				F2(
+					function (ind, rad) {
+						return A3($author$project$Main$kupongRadView, ind, rad, state.radforslag);
+					}),
+				state.kupong.rader)));
 };
 var $author$project$Main$mainView = function (state) {
 	return A2(
@@ -13671,7 +13824,7 @@ var $author$project$Main$mainView = function (state) {
 					]),
 				_List_fromArray(
 					[
-						$author$project$Main$kupongView(state.kupong)
+						$author$project$Main$kupongView(state)
 					])),
 				A2(
 				$mdgriffith$elm_ui$Element$column,

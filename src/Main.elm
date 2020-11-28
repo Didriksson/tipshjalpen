@@ -17,6 +17,7 @@ import Html.Attributes exposing (placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (request)
 import Json.Decode as D exposing (int)
+import Json.Encode as Encode
 import Loading
     exposing
         ( LoaderType(..)
@@ -25,6 +26,7 @@ import Loading
         )
 import Maybe exposing (Maybe)
 import Regex
+import Html exposing (b)
 
 
 
@@ -74,10 +76,17 @@ type alias Kupong =
     , rader : List KupongRad
     }
 
+type alias Forslag = 
+    {
+        nr : String
+        ,rad : String
+        
+    }
 
 type alias PageState =
     { kupong : Kupong
     , rad : Maybe KupongRad
+    , radforslag : Dict Int String
     }
 
 
@@ -105,7 +114,8 @@ init _ =
 type Msg
     = GotOppenKupong (Result Http.Error Kupong)
     | KlickadRad KupongRad
-    | SystemforslagChanged Bool
+    | SystemforslagChanged String Int Bool
+    | SkickaMedUppdateratRadforslag PageState
 
 
 {-| Returnerar det första värdet i listan som inte är Nothing.
@@ -135,9 +145,17 @@ valideraGarderingInput input =
                 Nothing
 
 
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        SkickaMedUppdateratRadforslag state ->
+            (Loading, 
+                Http.post
+                    { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
+                    , body = Http.jsonBody <| forslagEncoder state.radforslag
+                    , expect = Http.expectJson GotOppenKupong kupongDecoder
+                     })
         KlickadRad klickadRad ->
             case model of
                 Success state ->
@@ -151,7 +169,7 @@ update msg model =
                 Loading ->
                     case result of
                         Ok received ->
-                            ( Success (PageState received Nothing), Cmd.none )
+                            ( Success (PageState received Nothing Dict.empty), Cmd.none )
 
                         Err e ->
                             Debug.log (Debug.toString e)
@@ -160,10 +178,31 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
-        SystemforslagChanged b ->
-            ( model, Cmd.none )
+        SystemforslagChanged tecken match b  ->
+        
+                case model of
+                    Success state ->
+                        let 
+                            uppdateradRad =                 
+                                case Dict.get match state.radforslag of
+                                    Just ursprunligt ->
+                                        case b of
+                                            False -> 
+                                                String.replace tecken "" ursprunligt
+                                            True ->
+                                                ursprunligt ++ tecken
+                                    Nothing ->
+                                        case b of
+                                            True -> tecken
+                                            _ -> ""
 
-
+                        in
+                            (Success { state | radforslag = 
+                                        if String.isEmpty uppdateradRad then Dict.remove match state.radforslag 
+                                        else Dict.insert match uppdateradRad state.radforslag
+                                    } , Cmd.none )
+        
+                    _ -> (model, Cmd.none)
 
 -- SUBSCRIPTIONS
 
@@ -194,8 +233,8 @@ header =
             (text "Tipshjälpen")
 
 
-kupongView : Kupong -> Element Msg
-kupongView kupong =
+kupongView : PageState -> Element Msg
+kupongView state =
     column
         [ width fill
         , Background.color <| rgb255 250 250 250
@@ -203,12 +242,26 @@ kupongView kupong =
         , Border.rounded 10
         ]
     <|
-        el [ padding 10 ] (text kupong.name)
-            :: List.indexedMap kupongRadView kupong.rader
+        row [width fill] [
+            el [ padding 10, width fill ] (text state.kupong.name)
+            , Input.button
+            [
+            Element.alignRight
+            , Background.color <| rgb255 255 255 255
+            , Element.focused
+                [ Background.color <| rgb255 192 192 192 ]
+            ]
+            { onPress = Just (SkickaMedUppdateratRadforslag state)
+            , label = el [Border.rounded 16] (text "Uppdatera")
+            }
+            ]
+            :: List.indexedMap                 
+                (\ind rad ->
+                    kupongRadView ind rad state.radforslag
+                ) state.kupong.rader
 
-
-kupongRadView : Int -> KupongRad -> Element Msg
-kupongRadView index rad =
+kupongRadView : Int -> KupongRad  -> Dict Int String -> Element Msg
+kupongRadView index rad radforslag  =
     row
         [ width fill
         , Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }
@@ -223,7 +276,7 @@ kupongRadView index rad =
             { onPress = Just (KlickadRad rad)
             , label = matchinfoView index rad
             }
-        , el [ height fill, width shrink, alignRight, centerY ] (systemradRowView index rad)
+        , el [ height fill, width shrink, alignRight, centerY ] (systemradRowView index rad (Dict.get index radforslag))
         ]
 
 
@@ -302,7 +355,7 @@ mainView state =
             , Border.color <| rgb255 0xE0 0xE0 0xE0
             , alignTop
             ]
-            [ kupongView state.kupong
+            [ kupongView state
             ]
         , column [ width fill, height fill, spacing 10 ]
             [ case state.rad of
@@ -317,14 +370,14 @@ mainView state =
 
 emptysystemRad : Int -> List (Element Msg)
 emptysystemRad matchnummer =
-    [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" False
-    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" False
-    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" False
+    [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer False
+    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer False
+    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa")  "2" matchnummer False
     ]
 
 
-systemradRowView : Int -> KupongRad -> Element Msg
-systemradRowView matchnummer rad =
+systemradRowView : Int -> KupongRad -> Maybe String -> Element Msg
+systemradRowView matchnummer rad forslag =
     row
         [ Border.color <| rgb255 0xC0 0xC0 0xC0
         , Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
@@ -335,27 +388,33 @@ systemradRowView matchnummer rad =
         , spacing 10
         , paddingXY 10 0
         ]
-    <|
-        case rad.analys of
-            Just analys ->
-                case analys.radforslag of
-                    Just radforslag ->
-                        [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" (radforslag.hemmalag == "True")
-                        , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" (radforslag.kryss == "True")
-                        , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" (radforslag.bortalag == "True")
-                        ]
-
-                    _ ->
+        <|
+        case forslag of
+            Just f ->
+                [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer (String.contains "1" f )
+                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer (String.contains "x" f )
+                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" matchnummer (String.contains "2" f )
+                ]
+            Nothing ->
+                case rad.analys of
+                    Just analys ->                        
+                        case analys.radforslag of
+                            Just radforslag ->
+                                [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer (radforslag.hemmalag == "True")
+                                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer (radforslag.kryss == "True")
+                                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" matchnummer (radforslag.bortalag == "True")
+                                ]
+                            Nothing ->
+                                emptysystemRad matchnummer
+                    Nothing ->
                         emptysystemRad matchnummer
-
-            _ ->
-                emptysystemRad matchnummer
+    
 
 
-checkboxInput : String -> String -> Bool -> Element Msg
-checkboxInput labelText icontext kryssad =
+checkboxInput : String -> String -> Int -> Bool -> Element Msg
+checkboxInput labelText icontext matchnummer kryssad =
     Input.checkbox [ centerX, width fill, height fill ]
-        { onChange = SystemforslagChanged
+        { onChange = SystemforslagChanged icontext matchnummer
         , icon = checkboxIcon icontext
         , checked = kryssad
         , label = Input.labelHidden labelText
@@ -490,6 +549,13 @@ poissonTableColView rowIndex colIndex col =
     el [ width fill, height fill, Background.color color ] <|
         el [ centerY, centerX ] <|
             text (String.fromFloat col ++ "%")
+
+
+forslagEncoder : Dict Int String -> Encode.Value
+forslagEncoder forslag = 
+    Encode.object [
+        ("Test", "Testing")
+    ]
 
 
 analysDecoder : D.Decoder Analys
