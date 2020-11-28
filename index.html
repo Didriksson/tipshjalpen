@@ -6293,46 +6293,36 @@ var $author$project$Main$PageState = F3(
 var $author$project$Main$Success = function (a) {
 	return {$: 'Success', a: a};
 };
-var $elm$core$Dict$foldl = F3(
-	function (func, acc, dict) {
-		foldl:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return acc;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var $temp$func = func,
-					$temp$acc = A3(
-					func,
-					key,
-					value,
-					A3($elm$core$Dict$foldl, func, acc, left)),
-					$temp$dict = right;
-				func = $temp$func;
-				acc = $temp$acc;
-				dict = $temp$dict;
-				continue foldl;
-			}
-		}
-	});
-var $elm$json$Json$Encode$dict = F3(
-	function (toKey, toValue, dictionary) {
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$encodaForslagslista = function (forslag) {
+	return A2(
+		$elm$core$List$map,
+		function (data) {
+			return _List_fromArray(
+				[
+					_Utils_Tuple2(
+					'nr',
+					$elm$json$Json$Encode$int(data.a + 1)),
+					_Utils_Tuple2(
+					'forslag',
+					$elm$json$Json$Encode$string(data.b))
+				]);
+		},
+		$elm$core$Dict$toList(forslag));
+};
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
 		return _Json_wrap(
 			A3(
-				$elm$core$Dict$foldl,
-				F3(
-					function (key, value, obj) {
-						return A3(
-							_Json_addField,
-							toKey(key),
-							toValue(value),
-							obj);
-					}),
-				_Json_emptyObject(_Utils_Tuple0),
-				dictionary));
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
 	});
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
@@ -6347,14 +6337,16 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Main$forslagEncoder = function (forslag) {
 	return $elm$json$Json$Encode$object(
 		_List_fromArray(
 			[
 				_Utils_Tuple2(
 				'rad',
-				A3($elm$json$Json$Encode$dict, $elm$core$String$fromInt, $elm$json$Json$Encode$string, forslag))
+				A2(
+					$elm$json$Json$Encode$list,
+					$elm$json$Json$Encode$object,
+					$author$project$Main$encodaForslagslista(forslag)))
 			]));
 };
 var $elm$http$Http$jsonBody = function (value) {
@@ -6662,10 +6654,6 @@ var $mdgriffith$elm_ui$Internal$Model$lengthClassName = function (x) {
 			var len = x.b;
 			return 'max' + ($elm$core$String$fromInt(max) + $mdgriffith$elm_ui$Internal$Model$lengthClassName(len));
 	}
-};
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
 };
 var $mdgriffith$elm_ui$Internal$Model$transformClass = function (transform) {
 	switch (transform.$) {
@@ -9077,15 +9065,6 @@ var $mdgriffith$elm_ui$Internal$Model$staticRoot = function (opts) {
 				_List_Nil);
 	}
 };
-var $elm$json$Json$Encode$list = F2(
-	function (func, entries) {
-		return _Json_wrap(
-			A3(
-				$elm$core$List$foldl,
-				_Json_addEntry(func),
-				_Json_emptyArray(_Utils_Tuple0),
-				entries));
-	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:

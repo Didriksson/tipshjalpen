@@ -52,10 +52,15 @@ type alias Score =
     }
 
 
-type alias Analys =
+type alias Poissonanalys =
     { predictedScore : Score
     , outcomePercentage : MatchInfoHallare
     , poissonTable : List (List Float)
+    }
+
+
+type alias Analys =
+    { poisson : Maybe Poissonanalys
     , radforslag : Maybe MatchInfoHallare
     }
 
@@ -568,26 +573,27 @@ poissonTableColView rowIndex colIndex col =
             text (String.fromFloat col ++ "%")
 
 
-forslagEnstaka : Int -> String -> Encode.Value
-forslagEnstaka nr forslag =
-    Encode.object
-        [ ( "nr", Encode.int nr )
-        , ( "forslag", Encode.string forslag )
-        ]
+
+--- Tyvärr så måste jag köra en magisk "+1 på matcherna här eftersom det känns lite orimligt att skicka det med start på match 0..."
+
+
+encodaForslagslista : Dict Int String -> List (List ( String, Encode.Value ))
+encodaForslagslista forslag =
+    List.map
+        (\data ->
+            [ ( "nr", Encode.int (Tuple.first data + 1) )
+            , ( "forslag", Encode.string (Tuple.second data) )
+            ]
+        )
+        (Dict.toList forslag)
 
 
 forslagEncoder : Dict Int String -> Encode.Value
 forslagEncoder forslag =
     Encode.object
         [ ( "rad"
-          , Encode.list
-                ( "rad1"
-                , Encode.object
-                    [ ( "nr", Encode.int 1 )
-                    , ( "forslag", Encode.string "1x2" )
-                    ]
-                )
-                (Dict.toList forslag)
+          , Encode.list Encode.object
+                (encodaForslagslista forslag)
           )
         ]
 
