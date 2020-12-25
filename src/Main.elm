@@ -16,7 +16,7 @@ import Html exposing (Attribute, Html, b, button, div, header, img, input, li, p
 import Html.Attributes exposing (placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (request)
-import Json.Decode as D exposing (int)
+import Json.Decode as D exposing (decodeString, int)
 import Json.Encode as Encode
 import Loading
     exposing
@@ -24,7 +24,7 @@ import Loading
         , defaultConfig
         , render
         )
-import Maybe exposing (Maybe)
+import Maybe exposing (Maybe, withDefault)
 import Regex
 
 
@@ -41,7 +41,7 @@ main =
 
 
 type Model
-    = Loading
+    = Loading Radforslag
     | Success PageState
     | Failure
 
@@ -61,7 +61,7 @@ type alias Poissonanalys =
 
 type alias Analys =
     { poisson : Maybe Poissonanalys
-    , radforslag : Maybe MatchInfoHallare
+    , radforslag : Maybe MatchInfoHallareBool
     }
 
 
@@ -87,10 +87,14 @@ type alias Forslag =
     }
 
 
+type alias Radforslag =
+    Dict Int MatchInfoHallareBool
+
+
 type alias PageState =
     { kupong : Kupong
     , rad : Maybe KupongRad
-    , radforslag : Dict Int String
+    , grundrad : Radforslag
     }
 
 
@@ -101,11 +105,18 @@ type alias MatchInfoHallare =
     }
 
 
+type alias MatchInfoHallareBool =
+    { hemmalag : Bool
+    , kryss : Bool
+    , bortalag : Bool
+    }
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Loading
+    ( Loading Dict.empty
     , Http.get
-        { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
+        { url = "http://localhost:5000/hamtaKupong"
         , expect = Http.expectJson GotOppenKupong kupongDecoder
         }
     )
@@ -149,15 +160,36 @@ valideraGarderingInput input =
                 Nothing
 
 
+uppdateraRadforslag : MatchInfoHallareBool -> String -> Bool -> MatchInfoHallareBool
+uppdateraRadforslag rad tecken nyttvarde =
+    case tecken of
+        "1" ->
+            MatchInfoHallareBool nyttvarde rad.kryss rad.bortalag
+
+        "x" ->
+            MatchInfoHallareBool rad.hemmalag nyttvarde rad.bortalag
+
+        "2" ->
+            MatchInfoHallareBool rad.hemmalag rad.kryss nyttvarde
+
+        _ ->
+            rad
+
+
+matchInfoHallareBoolIsAllEmpty : MatchInfoHallareBool -> Bool
+matchInfoHallareBoolIsAllEmpty matchinfo =
+    not matchinfo.hemmalag && not matchinfo.kryss && not matchinfo.bortalag
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SkickaMedUppdateratRadforslag state ->
-            ( Loading
+            ( Loading state.grundrad
             , Http.post
                 { -- url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
                   url = "http://localhost:5000/hamtaKupong"
-                , body = Http.jsonBody <| forslagEncoder state.radforslag
+                , body = Http.jsonBody <| forslagEncoder state.grundrad
                 , expect = Http.expectJson GotOppenKupong kupongDecoder
                 }
             )
@@ -172,10 +204,10 @@ update msg model =
 
         GotOppenKupong result ->
             case model of
-                Loading ->
+                Loading grundrad ->
                     case result of
                         Ok received ->
-                            ( Success (PageState received Nothing Dict.empty), Cmd.none )
+                            ( Success (PageState received Nothing grundrad), Cmd.none )
 
                         Err e ->
                             Debug.log (Debug.toString e)
@@ -188,32 +220,19 @@ update msg model =
             case model of
                 Success state ->
                     let
-                        uppdateradRad =
-                            case Dict.get match state.radforslag of
-                                Just ursprunligt ->
-                                    case b of
-                                        False ->
-                                            String.replace tecken "" ursprunligt
-
-                                        True ->
-                                            ursprunligt ++ tecken
-
-                                Nothing ->
-                                    case b of
-                                        True ->
-                                            tecken
-
-                                        _ ->
-                                            ""
+                        uppdaterad =
+                            Dict.get match state.grundrad
+                                |> Maybe.withDefault (MatchInfoHallareBool False False False)
+                                |> (\rad -> uppdateraRadforslag rad tecken b)
                     in
                     ( Success
                         { state
-                            | radforslag =
-                                if String.isEmpty uppdateradRad then
-                                    Dict.remove match state.radforslag
+                            | grundrad =
+                                if matchInfoHallareBoolIsAllEmpty uppdaterad then
+                                    Dict.remove match state.grundrad
 
                                 else
-                                    Dict.insert match uppdateradRad state.radforslag
+                                    Dict.insert match uppdaterad state.grundrad
                         }
                     , Cmd.none
                     )
@@ -275,13 +294,13 @@ kupongView state =
             ]
             :: List.indexedMap
                 (\ind rad ->
-                    kupongRadView ind rad state.radforslag
+                    kupongRadView ind rad state.grundrad
                 )
                 state.kupong.rader
 
 
-kupongRadView : Int -> KupongRad -> Dict Int String -> Element Msg
-kupongRadView index rad radforslag =
+kupongRadView : Int -> KupongRad -> Radforslag -> Element Msg
+kupongRadView index rad grundrad =
     row
         [ width fill
         , Border.widthEach { bottom = 0, top = 2, left = 0, right = 0 }
@@ -296,7 +315,7 @@ kupongRadView index rad radforslag =
             { onPress = Just (KlickadRad rad)
             , label = matchinfoView index rad
             }
-        , el [ height fill, width shrink, alignRight, centerY ] (systemradRowView index rad (Dict.get index radforslag))
+        , el [ height fill, width shrink, alignRight, centerY ] (systemradRowView index rad (Dict.get index grundrad))
         ]
 
 
@@ -340,9 +359,18 @@ oddsOrNothingView maybeOdds =
             [ Element.none ]
 
 
+matchInfoHallareBoolOrEmpty : Maybe MatchInfoHallareBool -> MatchInfoHallareBool
+matchInfoHallareBoolOrEmpty maybeMatchinfo =
+    Maybe.withDefault (MatchInfoHallareBool False False False) maybeMatchinfo
+
+
 predictedScoreView : Maybe Analys -> List (Element msg)
 predictedScoreView maybeAnalys =
-    case maybeAnalys of
+    let
+        predicted =
+            maybeAnalys |> Maybe.andThen (\v -> v.poisson)
+    in
+    case predicted of
         Just a ->
             [ el [ Element.alignRight, Element.alignTop ] (text (String.fromInt a.predictedScore.hemmalag))
             , el [ Element.alignRight, Element.alignBottom ] (text (String.fromInt a.predictedScore.bortalag))
@@ -353,11 +381,12 @@ predictedScoreView maybeAnalys =
                 [ Element.alignRight
                 , Font.color <| rgb255 252 3 73
                 , Font.extraBold
-                , Font.size 35
+                , Font.size 30
                 , mouseOver
                     [ Background.color <| rgb255 0xFF 0xFF 0xFF, Font.color <| rgb255 0 0 0 ]
                 , focused
                     [ Border.shadow { offset = ( 4, 4 ), size = 3, blur = 10, color = rgb255 114 159 207 } ]
+                , htmlAttribute (Html.Attributes.title "Kunde inte analysera match. Om du vill ha ett radförslag av systemet behöver du inkludera denna i en grundrad och uppdatera.")
                 ]
                 { onPress = Nothing
                 , label = el [] (text "!")
@@ -388,16 +417,8 @@ mainView state =
         ]
 
 
-emptysystemRad : Int -> List (Element Msg)
-emptysystemRad matchnummer =
-    [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer False
-    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer False
-    , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" matchnummer False
-    ]
-
-
-systemradRowView : Int -> KupongRad -> Maybe String -> Element Msg
-systemradRowView matchnummer rad forslag =
+systemradRowView : Int -> KupongRad -> Maybe MatchInfoHallareBool -> Element Msg
+systemradRowView matchnummer rad maybe_grundrad =
     row
         [ Border.color <| rgb255 0xC0 0xC0 0xC0
         , Border.widthEach { bottom = 0, top = 0, left = 2, right = 0 }
@@ -409,51 +430,47 @@ systemradRowView matchnummer rad forslag =
         , paddingXY 10 0
         ]
     <|
-        case forslag of
-            Just f ->
-                [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer (String.contains "1" f)
-                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer (String.contains "x" f)
-                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" matchnummer (String.contains "2" f)
-                ]
+        let
+            radforslag =
+                rad.analys
+                    |> Maybe.andThen (\a -> a.radforslag)
+                    |> matchInfoHallareBoolOrEmpty
 
-            Nothing ->
-                case rad.analys of
-                    Just analys ->
-                        case analys.radforslag of
-                            Just radforslag ->
-                                [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer (radforslag.hemmalag == "True")
-                                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer (radforslag.kryss == "True")
-                                , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" matchnummer (radforslag.bortalag == "True")
-                                ]
-
-                            Nothing ->
-                                emptysystemRad matchnummer
-
-                    Nothing ->
-                        emptysystemRad matchnummer
+            grundrad =
+                matchInfoHallareBoolOrEmpty maybe_grundrad
+        in
+        [ el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Etta") "1" matchnummer radforslag.hemmalag grundrad.hemmalag
+        , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Kryss") "x" matchnummer radforslag.kryss grundrad.kryss
+        , el [ centerX, height fill ] <| checkboxInput ("Match " ++ String.fromInt matchnummer ++ " - Tvåa") "2" matchnummer radforslag.bortalag grundrad.bortalag
+        ]
 
 
-checkboxInput : String -> String -> Int -> Bool -> Element Msg
-checkboxInput labelText icontext matchnummer kryssad =
+checkboxInput : String -> String -> Int -> Bool -> Bool -> Element Msg
+checkboxInput labelText icontext matchnummer forslag anvandarforslag =
     Input.checkbox [ centerX, width fill, height fill ]
         { onChange = SystemforslagChanged icontext matchnummer
-        , icon = checkboxIcon icontext
-        , checked = kryssad
+        , icon = checkboxIcon icontext forslag anvandarforslag
+        , checked = anvandarforslag
         , label = Input.labelHidden labelText
         }
 
 
-checkboxIcon : String -> Bool -> Element msg
-checkboxIcon labeltext isChecked =
+checkboxIcon : String -> Bool -> Bool -> Bool -> Element msg
+checkboxIcon labeltext systemforslag anvandarforslag isChecked =
     el
         [ width <| px 30
         , height <| px 30
         , centerY
         , centerX
         , padding 4
+        , if anvandarforslag then
+            Border.color <| rgba255 150 0 0 0.7
+
+          else
+            Border.color <| rgb255 0xC0 0xC0 0xC0
+        , Background.color <| rgba255 0 0 0 0
         , Border.rounded 6
         , Border.width 2
-        , Border.color <| rgb255 0xC0 0xC0 0xC0
         ]
     <|
         el
@@ -461,7 +478,7 @@ checkboxIcon labeltext isChecked =
             , height fill
             , Border.rounded 4
             , Background.color <|
-                if isChecked then
+                if systemforslag then
                     rgb255 114 159 207
 
                 else
@@ -474,7 +491,7 @@ checkboxIcon labeltext isChecked =
 view : Model -> Html Msg
 view model =
     case model of
-        Loading ->
+        Loading _ ->
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
@@ -511,26 +528,31 @@ analyzeView : KupongRad -> Element Msg
 analyzeView rad =
     case rad.analys of
         Just analys ->
-            column [ width fill, height fill, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128 ]
-                [ column [ centerX, Font.bold ]
-                    [ el [ centerX, Font.extraLight ] <| text rad.liga
-                    , el [ centerX ] <| text (rad.home ++ " - " ++ rad.away)
-                    ]
-                , column []
-                    [ el [] <| text ("Predicted score: " ++ String.fromInt analys.predictedScore.hemmalag ++ " - " ++ String.fromInt analys.predictedScore.bortalag)
-                    , el [] <| text ("Poissonanalys win/draw/win: " ++ analys.outcomePercentage.hemmalag ++ " " ++ analys.outcomePercentage.kryss ++ " " ++ analys.outcomePercentage.bortalag)
-                    , case rad.odds of
-                        Just o ->
-                            el [] <| text ("Odds" ++ " 1: " ++ o.hemmalag ++ " X: " ++ o.kryss ++ " 2: " ++ o.bortalag)
+            case analys.poisson of
+                Just poisson ->
+                    column [ width fill, height fill, padding 10, Border.rounded 10, Background.color <| rgb255 51 255 128 ]
+                        [ column [ centerX, Font.bold ]
+                            [ el [ centerX, Font.extraLight ] <| text rad.liga
+                            , el [ centerX ] <| text (rad.home ++ " - " ++ rad.away)
+                            ]
+                        , column []
+                            [ el [] <| text ("Predicted score: " ++ String.fromInt poisson.predictedScore.hemmalag ++ " - " ++ String.fromInt poisson.predictedScore.bortalag)
+                            , el [] <| text ("Poissonanalys win/draw/win: " ++ poisson.outcomePercentage.hemmalag ++ " " ++ poisson.outcomePercentage.kryss ++ " " ++ poisson.outcomePercentage.bortalag)
+                            , case rad.odds of
+                                Just o ->
+                                    el [] <| text ("Odds" ++ " 1: " ++ o.hemmalag ++ " X: " ++ o.kryss ++ " 2: " ++ o.bortalag)
 
-                        Nothing ->
-                            Element.none
-                    , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
-                    ]
-                , column [ width fill, height (px 300), Font.center ] <|
-                    headerRow 5
-                        :: List.take 6 (List.indexedMap poissonTableRowView analys.poissonTable)
-                ]
+                                Nothing ->
+                                    Element.none
+                            , el [] <| text ("Svenska folket: " ++ rad.svenskaFolket.hemmalag ++ "%" ++ " " ++ rad.svenskaFolket.kryss ++ "%" ++ " " ++ rad.svenskaFolket.bortalag ++ "%")
+                            ]
+                        , column [ width fill, height (px 300), Font.center ] <|
+                            headerRow 5
+                                :: List.take 6 (List.indexedMap poissonTableRowView poisson.poissonTable)
+                        ]
+
+                Nothing ->
+                    text "Kunde inte analysera den här matchen. Försök igen senare."
 
         Nothing ->
             text "Kunde inte analysera den här matchen. Försök igen senare."
@@ -573,22 +595,38 @@ poissonTableColView rowIndex colIndex col =
             text (String.fromFloat col ++ "%")
 
 
+boolTillTecken : Bool -> String -> String
+boolTillTecken matchteckenBool tecken =
+    if matchteckenBool then
+        tecken
+
+    else
+        ""
+
+
+radforslagTillStrang : MatchInfoHallareBool -> String
+radforslagTillStrang forslag =
+    boolTillTecken forslag.hemmalag "1"
+        ++ boolTillTecken forslag.kryss "x"
+        ++ boolTillTecken forslag.bortalag "2"
+
+
 
 --- Tyvärr så måste jag köra en magisk "+1 på matcherna här eftersom det känns lite orimligt att skicka det med start på match 0..."
 
 
-encodaForslagslista : Dict Int String -> List (List ( String, Encode.Value ))
+encodaForslagslista : Radforslag -> List (List ( String, Encode.Value ))
 encodaForslagslista forslag =
     List.map
         (\data ->
             [ ( "nr", Encode.int (Tuple.first data + 1) )
-            , ( "forslag", Encode.string (Tuple.second data) )
+            , ( "forslag", Encode.string (radforslagTillStrang (Tuple.second data)) )
             ]
         )
         (Dict.toList forslag)
 
 
-forslagEncoder : Dict Int String -> Encode.Value
+forslagEncoder : Radforslag -> Encode.Value
 forslagEncoder forslag =
     Encode.object
         [ ( "rad"
@@ -598,21 +636,26 @@ forslagEncoder forslag =
         ]
 
 
-analysDecoder : D.Decoder Analys
-analysDecoder =
-    D.map4
-        Analys
-        (D.field "poisson"
-            (D.field "predictedScore"
-                (D.map2 Score
-                    (D.field "hemmalag" D.int)
-                    (D.field "bortalag" D.int)
-                )
+poissonDecoder : D.Decoder Poissonanalys
+poissonDecoder =
+    D.map3
+        Poissonanalys
+        (D.field "predictedScore"
+            (D.map2 Score
+                (D.field "hemmalag" D.int)
+                (D.field "bortalag" D.int)
             )
         )
-        (D.field "poisson" (D.field "outcomePercentage" matchInfoHallareDecoder))
-        (D.field "poisson" (D.field "poissonTable" (D.list (D.list D.float))))
-        (optionalField "radforslag" matchInfoHallareDecoder)
+        (D.field "outcomePercentage" matchInfoHallareDecoder)
+        (D.field "poissonTable" (D.list (D.list D.float)))
+
+
+analysDecoder : D.Decoder Analys
+analysDecoder =
+    D.map2
+        Analys
+        (optionalField "poisson" poissonDecoder)
+        (optionalField "radforslag" matchInfoHallareBoolDecoder)
 
 
 matchInfoHallareDecoder : D.Decoder MatchInfoHallare
@@ -622,6 +665,15 @@ matchInfoHallareDecoder =
         (D.field "hemmalag" D.string)
         (D.field "kryss" D.string)
         (D.field "bortalag" D.string)
+
+
+matchInfoHallareBoolDecoder : D.Decoder MatchInfoHallareBool
+matchInfoHallareBoolDecoder =
+    D.map3
+        MatchInfoHallareBool
+        (D.field "hemmalag" D.bool)
+        (D.field "kryss" D.bool)
+        (D.field "bortalag" D.bool)
 
 
 kupongRadDecoder : D.Decoder KupongRad
