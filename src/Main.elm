@@ -26,7 +26,6 @@ import Loading
         )
 import Maybe exposing (Maybe, withDefault)
 import Regex exposing (Match)
-import Round
 
 
 
@@ -579,12 +578,26 @@ view model =
                         [ borderedColumn
                             [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Tipset"
                             , paragraph [] [ text "Stryktipset/Europatipset samt Topptipset." ]
-                            , Input.button [ centerX, alignBottom, padding 25 ] { label = text "Mot jacktoppen", onPress = Just SelectedTipset }
+                            , Input.button
+                                [ Border.rounded 9
+                                , Border.width 3
+                                , centerX
+                                , alignBottom
+                                , padding 25
+                                ]
+                                { label = text "Mot jackpotten", onPress = Just SelectedTipset }
                             ]
                         , borderedColumn
                             [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Över/under 1.5"
                             , paragraph [] [ text "Ger förslag på bra spel för marknaden över/under 1.5. Ger låga odds men kan med fördel läggas i en ackumulator." ]
-                            , Input.button [ centerX, alignBottom, padding 25 ] { label = text "Ta mig till över/under", onPress = Just SelectedOverUnder }
+                            , Input.button
+                                [ Border.rounded 9
+                                , Border.width 3
+                                , centerX
+                                , alignBottom
+                                , padding 25
+                                ]
+                                { label = text "Ta mig till över/under", onPress = Just SelectedOverUnder }
                             ]
                         ]
                     ]
