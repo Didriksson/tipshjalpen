@@ -6465,7 +6465,7 @@ var $author$project$Main$update = F2(
 					$elm$http$Http$get(
 						{
 							expect: A2($elm$http$Http$expectJson, $author$project$Main$GotOppenKupong, $author$project$Main$kupongDecoder),
-							url: 'https://tipshjalpen.herokuapp.com/hamtaKupong'
+							url: 'http://localhost:5000/hamtaKupong'
 						}));
 			case 'SelectedOverUnder':
 				return _Utils_Tuple2(
@@ -6473,7 +6473,7 @@ var $author$project$Main$update = F2(
 					$elm$http$Http$get(
 						{
 							expect: A2($elm$http$Http$expectJson, $author$project$Main$GotOverunder, $author$project$Main$overUnderDecoder),
-							url: 'https://tipshjalpen.herokuapp.com/overunder'
+							url: 'http://localhost:5000/overunder'
 						}));
 			case 'SkickaMedUppdateratRadforslag':
 				var state = msg.a;
@@ -6484,7 +6484,7 @@ var $author$project$Main$update = F2(
 							body: $elm$http$Http$jsonBody(
 								$author$project$Main$forslagEncoder(state.grundrad)),
 							expect: A2($elm$http$Http$expectJson, $author$project$Main$GotOppenKupong, $author$project$Main$kupongDecoder),
-							url: 'https://tipshjalpen.herokuapp.com/hamtaKupong'
+							url: 'http://localhost:5000/hamtaKupong'
 						}));
 			case 'KlickadRad':
 				var klickadRad = msg.a;
@@ -17631,12 +17631,14 @@ var $author$project$Main$view = function (model) {
 											$mdgriffith$elm_ui$Element$Input$button,
 											_List_fromArray(
 												[
+													$mdgriffith$elm_ui$Element$Border$rounded(9),
+													$mdgriffith$elm_ui$Element$Border$width(3),
 													$mdgriffith$elm_ui$Element$centerX,
 													$mdgriffith$elm_ui$Element$alignBottom,
 													$mdgriffith$elm_ui$Element$padding(25)
 												]),
 											{
-												label: $mdgriffith$elm_ui$Element$text('Mot jacktoppen'),
+												label: $mdgriffith$elm_ui$Element$text('Mot jackpotten'),
 												onPress: $elm$core$Maybe$Just($author$project$Main$SelectedTipset)
 											})
 										])),
@@ -17664,6 +17666,8 @@ var $author$project$Main$view = function (model) {
 											$mdgriffith$elm_ui$Element$Input$button,
 											_List_fromArray(
 												[
+													$mdgriffith$elm_ui$Element$Border$rounded(9),
+													$mdgriffith$elm_ui$Element$Border$width(3),
 													$mdgriffith$elm_ui$Element$centerX,
 													$mdgriffith$elm_ui$Element$alignBottom,
 													$mdgriffith$elm_ui$Element$padding(25)
