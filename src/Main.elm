@@ -8,7 +8,7 @@ import Debug exposing (log)
 import Dict exposing (Dict)
 import Element exposing (..)
 import Element.Background as Background
-import Element.Border as Border
+import Element.Border as Border exposing (color)
 import Element.Events exposing (..)
 import Element.Font as Font exposing (alignLeft, center)
 import Element.Input as Input
@@ -25,7 +25,8 @@ import Loading
         , render
         )
 import Maybe exposing (Maybe, withDefault)
-import Regex
+import Regex exposing (Match)
+import Round
 
 
 
@@ -41,8 +42,11 @@ main =
 
 
 type Model
-    = Loading Radforslag
-    | Success PageState
+    = Selection
+    | LoadingTips Radforslag
+    | LoadingOverunder
+    | SuccessTips TipsState
+    | SuccessOverUnder OverUnder
     | Failure
 
 
@@ -81,6 +85,20 @@ type alias Kupong =
     }
 
 
+type alias Match =
+    { hemmalag : String
+    , bortalag : String
+    , liga : String
+    , analysinfo : String
+    }
+
+
+type alias OverUnder =
+    { poisson : List Match
+    , senasteFem : List Match
+    }
+
+
 type alias Forslag =
     { nr : String
     , rad : String
@@ -91,7 +109,7 @@ type alias Radforslag =
     Dict Int MatchInfoHallareBool
 
 
-type alias PageState =
+type alias TipsState =
     { kupong : Kupong
     , rad : Maybe KupongRad
     , grundrad : Radforslag
@@ -114,11 +132,8 @@ type alias MatchInfoHallareBool =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Loading Dict.empty
-    , Http.get
-        { url = "http://localhost:5000/hamtaKupong"
-        , expect = Http.expectJson GotOppenKupong kupongDecoder
-        }
+    ( Selection
+    , Cmd.none
     )
 
 
@@ -127,10 +142,14 @@ init _ =
 
 
 type Msg
-    = GotOppenKupong (Result Http.Error Kupong)
+    = HeaderClick
+    | SelectedTipset
+    | SelectedOverUnder
+    | GotOppenKupong (Result Http.Error Kupong)
+    | GotOverunder (Result Http.Error OverUnder)
     | KlickadRad KupongRad
     | SystemforslagChanged String Int Bool
-    | SkickaMedUppdateratRadforslag PageState
+    | SkickaMedUppdateratRadforslag TipsState
 
 
 {-| Returnerar det första värdet i listan som inte är Nothing.
@@ -184,8 +203,27 @@ matchInfoHallareBoolIsAllEmpty matchinfo =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        HeaderClick ->
+            ( Selection, Cmd.none )
+
+        SelectedTipset ->
+            ( LoadingTips Dict.empty
+            , Http.get
+                { url = "http://localhost:5000/hamtaKupong"
+                , expect = Http.expectJson GotOppenKupong kupongDecoder
+                }
+            )
+
+        SelectedOverUnder ->
+            ( LoadingOverunder
+            , Http.get
+                { url = "http://localhost:5000/overunder"
+                , expect = Http.expectJson GotOverunder overUnderDecoder
+                }
+            )
+
         SkickaMedUppdateratRadforslag state ->
-            ( Loading state.grundrad
+            ( LoadingTips state.grundrad
             , Http.post
                 { -- url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
                   url = "http://localhost:5000/hamtaKupong"
@@ -196,18 +234,32 @@ update msg model =
 
         KlickadRad klickadRad ->
             case model of
-                Success state ->
-                    ( Success { state | rad = Just klickadRad }, Cmd.none )
+                SuccessTips state ->
+                    ( SuccessTips { state | rad = Just klickadRad }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+        GotOverunder result ->
+            case model of
+                LoadingOverunder ->
+                    case result of
+                        Ok received ->
+                            ( SuccessOverUnder received, Cmd.none )
+
+                        Err e ->
+                            Debug.log (Debug.toString e)
+                                ( Failure, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
 
         GotOppenKupong result ->
             case model of
-                Loading grundrad ->
+                LoadingTips grundrad ->
                     case result of
                         Ok received ->
-                            ( Success (PageState received Nothing grundrad), Cmd.none )
+                            ( SuccessTips (TipsState received Nothing grundrad), Cmd.none )
 
                         Err e ->
                             Debug.log (Debug.toString e)
@@ -218,14 +270,14 @@ update msg model =
 
         SystemforslagChanged tecken match b ->
             case model of
-                Success state ->
+                SuccessTips state ->
                     let
                         uppdaterad =
                             Dict.get match state.grundrad
                                 |> Maybe.withDefault (MatchInfoHallareBool False False False)
                                 |> (\rad -> uppdateraRadforslag rad tecken b)
                     in
-                    ( Success
+                    ( SuccessTips
                         { state
                             | grundrad =
                                 if matchInfoHallareBoolIsAllEmpty uppdaterad then
@@ -254,7 +306,7 @@ subscriptions model =
 -- VIEW
 
 
-header : Element msg
+header : Element Msg
 header =
     el
         [ height (px 100)
@@ -268,10 +320,14 @@ header =
             , Font.color <| rgb255 255 255 255
             , Font.size 50
             ]
-            (text "Tipshjälpen")
+            (Input.button []
+                { label = text "Tipshjälpen"
+                , onPress = Just HeaderClick
+                }
+            )
 
 
-kupongView : PageState -> Element Msg
+kupongView : TipsState -> Element Msg
 kupongView state =
     column
         [ width fill
@@ -394,8 +450,8 @@ predictedScoreView maybeAnalys =
             ]
 
 
-mainView : PageState -> Element Msg
-mainView state =
+mainTipsView : TipsState -> Element Msg
+mainTipsView state =
     row [ Background.color <| rgba255 100 100 100 0.5, width fill, height fill, padding 50, spacing 20 ]
         [ column
             [ width fill
@@ -488,10 +544,52 @@ checkboxIcon labeltext systemforslag anvandarforslag isChecked =
             text labeltext
 
 
+laddningsSkarm : Element Msg
+laddningsSkarm =
+    el [ alignBottom ] <|
+        Element.html
+            (Loading.render
+                BouncingBalls
+                { defaultConfig | color = "#333" }
+                Loading.On
+            )
+
+
 view : Model -> Html Msg
 view model =
     case model of
-        Loading _ ->
+        Selection ->
+            let
+                borderedColumn =
+                    column
+                        [ width fill
+                        , height fill
+                        , scrollbarY
+                        , padding 25
+                        , spacing 5
+                        , Font.size 16
+                        , Border.width 2
+                        , Border.rounded 6
+                        ]
+            in
+            layout [] <|
+                column [ height fill, width fill ]
+                    [ header
+                    , row [ width fill, height (px 500), padding 100, spacing 10 ]
+                        [ borderedColumn
+                            [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Tipset"
+                            , paragraph [] [ text "Stryktipset/Europatipset samt Topptipset." ]
+                            , Input.button [ centerX, alignBottom, padding 25 ] { label = text "Mot jacktoppen", onPress = Just SelectedTipset }
+                            ]
+                        , borderedColumn
+                            [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Över/under 1.5"
+                            , paragraph [] [ text "Ger förslag på bra spel för marknaden över/under 1.5. Ger låga odds men kan med fördel läggas i en ackumulator." ]
+                            , Input.button [ centerX, alignBottom, padding 25 ] { label = text "Ta mig till över/under", onPress = Just SelectedOverUnder }
+                            ]
+                        ]
+                    ]
+
+        LoadingTips _ ->
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
@@ -503,25 +601,111 @@ view model =
                             , Font.size 50
                             ]
                             (text "Laddar in kupong")
-                        , el [ alignBottom ] <|
-                            Element.html
-                                (Loading.render
-                                    BouncingBalls
-                                    { defaultConfig | color = "#333" }
-                                    Loading.On
-                                )
+                        , laddningsSkarm
                         ]
                     ]
 
-        Success results ->
+        LoadingOverunder ->
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
-                    , mainView results
+                    , row [ centerX, centerY ]
+                        [ el
+                            [ centerX
+                            , centerY
+                            , Font.color <| rgb255 0 0 0
+                            , Font.size 50
+                            ]
+                            (text "Laddar in över/under")
+                        , laddningsSkarm
+                        ]
+                    ]
+
+        SuccessTips results ->
+            layout [] <|
+                column [ height fill, width fill ]
+                    [ header
+                    , mainTipsView results
+                    ]
+
+        SuccessOverUnder results ->
+            layout [] <|
+                column [ height fill, width fill ]
+                    [ header
+                    , mainOverUnderView results
                     ]
 
         Failure ->
             layout [] <| text "Det gick inte så bra att hitta en kupong."
+
+
+matchFixtureView : Match -> Element Msg
+matchFixtureView match =
+    column [ width fill ]
+        [ el [ Font.size 10 ] <|
+            text match.liga
+        , el
+            []
+          <|
+            text match.hemmalag
+        , el
+            []
+          <|
+            text match.bortalag
+        ]
+
+
+overUnderItemPoisson : Match -> Element Msg
+overUnderItemPoisson match =
+    row [ width fill ]
+        [ matchFixtureView match
+
+        -- Det här är såklart slappt. Men orkar inte kolla upp korrekt avrundning
+        , el [] <| text (String.slice 0 5 match.analysinfo ++ "%")
+        ]
+
+
+overUnderItemSenaste : Match -> Element Msg
+overUnderItemSenaste match =
+    row [ width fill ]
+        [ matchFixtureView match
+
+        -- Det här är såklart slappt. Men orkar inte kolla upp korrekt avrundning
+        , el [] <| text (String.slice 0 5 match.analysinfo ++ "%")
+        ]
+
+
+mainOverUnderView : OverUnder -> Element Msg
+mainOverUnderView overunder =
+    let
+        borderedColumn =
+            column
+                [ width fill
+                , height fill
+                , scrollbarY
+                , padding 5
+                , spacing 5
+                , Font.size 16
+                , Border.width 2
+                , Border.rounded 6
+                , Border.color <| rgba255 150 0 0 1
+                ]
+    in
+    row [ width fill, height fill, padding 50, spacing 10 ]
+        [ borderedColumn
+            [ el [ width fill, Font.size 28, height <| px 50, Border.widthEach { bottom = 3, top = 0, left = 0, right = 0 } ] <| text "Poisson"
+            , column [ width fill, paddingXY 0 5, spacing 10 ] <| List.map overUnderItemPoisson overunder.poisson
+            ]
+        , borderedColumn
+            [ el [ width fill, Font.size 28, height <| px 50, Border.widthEach { bottom = 3, top = 0, left = 0, right = 0 } ] <| text "Senaste matcherna"
+            , paragraph [ Font.size 12, height <| px 50 ] [ text "Siffran svarar mot antalet matcher (av 5 per lag) som överskrider 3 mål" ]
+            , if List.length overunder.senasteFem == 0 then
+                el [] <| text "Ingen match svarade mot kriterierna."
+
+              else
+                column [ width fill, paddingXY 0 5, spacing 10 ] <| List.map overUnderItemSenaste overunder.senasteFem
+            ]
+        ]
 
 
 analyzeView : KupongRad -> Element Msg
@@ -693,6 +877,24 @@ kupongDecoder =
         Kupong
         (D.field "namn" D.string)
         (D.field "matcher" (D.list kupongRadDecoder))
+
+
+matchDecoder : D.Decoder Match
+matchDecoder =
+    D.map4
+        Match
+        (D.field "match" (D.field "homeTeam" D.string))
+        (D.field "match" (D.field "awayTeam" D.string))
+        (D.field "match" (D.field "liga" D.string))
+        (D.field "analysinfo" D.float |> D.map String.fromFloat)
+
+
+overUnderDecoder : D.Decoder OverUnder
+overUnderDecoder =
+    D.map2
+        OverUnder
+        (D.field "poisson" (D.list matchDecoder))
+        (D.field "senasteFem" (D.list matchDecoder))
 
 
 optionalField : String -> D.Decoder a -> D.Decoder (Maybe a)
