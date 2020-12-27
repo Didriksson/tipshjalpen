@@ -26,7 +26,6 @@ import Loading
         )
 import Maybe exposing (Maybe, withDefault)
 import Regex exposing (Match)
-import Round
 
 
 
@@ -209,7 +208,7 @@ update msg model =
         SelectedTipset ->
             ( LoadingTips Dict.empty
             , Http.get
-                { url = "http://localhost:5000/hamtaKupong"
+                { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
                 , expect = Http.expectJson GotOppenKupong kupongDecoder
                 }
             )
@@ -217,7 +216,7 @@ update msg model =
         SelectedOverUnder ->
             ( LoadingOverunder
             , Http.get
-                { url = "http://localhost:5000/overunder"
+                { url = "https://tipshjalpen.herokuapp.com/overunder"
                 , expect = Http.expectJson GotOverunder overUnderDecoder
                 }
             )
@@ -226,7 +225,7 @@ update msg model =
             ( LoadingTips state.grundrad
             , Http.post
                 { -- url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
-                  url = "http://localhost:5000/hamtaKupong"
+                  url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
                 , body = Http.jsonBody <| forslagEncoder state.grundrad
                 , expect = Http.expectJson GotOppenKupong kupongDecoder
                 }
@@ -377,25 +376,25 @@ kupongRadView index rad grundrad =
 
 matchinfoView : Int -> KupongRad -> Element Msg
 matchinfoView index rad =
-    row [ width fill ]
+    row [ width fill]
         [ el [ Font.size 10 ] (text (String.fromInt (index + 1) ++ "."))
         , column [ width fill, padding 10 ]
             [ el [ width fill, Font.size 10 ] (text rad.liga)
-            , row [ width fill ]
-                [ column [ height fill, width <| fillPortion 3 ]
+            , row [ width fill]
+                [ column [ height fill, width fill]
                     [ el [ Element.alignTop ] (text rad.home)
                     , el [ Element.alignBottom ] (text rad.away)
                     ]
-                , row [ width fill, height fill, spacing 10, Font.size 12 ]
-                    [ column [ height fill ]
+                , row [ height fill, Font.size 12, width <| (px 100)]
+                    [ column [ height fill, width fill ]
                         [ el [] (text (rad.svenskaFolket.hemmalag ++ "%"))
                         , el [] (text (rad.svenskaFolket.kryss ++ "%"))
                         , el [] (text (rad.svenskaFolket.bortalag ++ "%"))
                         ]
-                    , column [ height fill ] <|
+                    , column [ height fill, width fill ] <|
                         oddsOrNothingView rad.odds
                     ]
-                , column [ alignRight, height fill, width <| fillPortion 3 ] <|
+                , column [width <| (px 30), alignRight, height fill ] <|
                     predictedScoreView rad.analys
                 ]
             ]
