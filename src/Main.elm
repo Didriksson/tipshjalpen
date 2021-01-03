@@ -12,7 +12,7 @@ import Element.Border as Border exposing (color)
 import Element.Events exposing (..)
 import Element.Font as Font exposing (alignLeft, center)
 import Element.Input as Input
-import Html exposing (Attribute, Html, b, button, div, header, img, input, li, p, span, ul)
+import Html exposing (Attribute, Html, a, b, button, div, header, img, input, label, li, output, p, span, ul)
 import Html.Attributes exposing (placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Http exposing (request)
@@ -88,14 +88,29 @@ type alias Match =
     { hemmalag : String
     , bortalag : String
     , liga : String
-    , analysinfo : String
+    , resultat : Maybe Score
+    , date : String
+    }
+
+
+type alias OverUnderItem =
+    { match : Match
+    , poisson : List String
+    , senasteHemma : List Match
+    , senasteBorta : List Match
     }
 
 
 type alias OverUnder =
-    { poisson : List Match
-    , senasteFem : List Match
+    { data : List OverUnderItem
+    , overUnderModal : OverUnderModalState
     }
+
+
+type OverUnderModalState
+    = NoneModal
+    | HemmalagModal Match
+    | BortalagModal Match
 
 
 type alias Forslag =
@@ -149,6 +164,7 @@ type Msg
     | KlickadRad KupongRad
     | SystemforslagChanged String Int Bool
     | SkickaMedUppdateratRadforslag TipsState
+    | OverUnderVisaModal OverUnderModalState
 
 
 {-| Returnerar det första värdet i listan som inte är Nothing.
@@ -202,13 +218,21 @@ matchInfoHallareBoolIsAllEmpty matchinfo =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        OverUnderVisaModal modal ->
+            case model of
+                SuccessOverUnder state ->
+                    ( SuccessOverUnder { state | overUnderModal = modal }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
         HeaderClick ->
             ( Selection, Cmd.none )
 
         SelectedTipset ->
             ( LoadingTips Dict.empty
             , Http.get
-                { url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
+                { url = "http://localhost:5000/hamtaKupong"
                 , expect = Http.expectJson GotOppenKupong kupongDecoder
                 }
             )
@@ -216,7 +240,7 @@ update msg model =
         SelectedOverUnder ->
             ( LoadingOverunder
             , Http.get
-                { url = "https://tipshjalpen.herokuapp.com/overunder"
+                { url = "http://localhost:5000/overunder"
                 , expect = Http.expectJson GotOverunder overUnderDecoder
                 }
             )
@@ -224,8 +248,8 @@ update msg model =
         SkickaMedUppdateratRadforslag state ->
             ( LoadingTips state.grundrad
             , Http.post
-                { -- url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
-                  url = "https://tipshjalpen.herokuapp.com/hamtaKupong"
+                { -- url = "http://localhost:5000/hamtaKupong"
+                  url = "http://localhost:5000/hamtaKupong"
                 , body = Http.jsonBody <| forslagEncoder state.grundrad
                 , expect = Http.expectJson GotOppenKupong kupongDecoder
                 }
@@ -376,16 +400,16 @@ kupongRadView index rad grundrad =
 
 matchinfoView : Int -> KupongRad -> Element Msg
 matchinfoView index rad =
-    row [ width fill]
+    row [ width fill ]
         [ el [ Font.size 10 ] (text (String.fromInt (index + 1) ++ "."))
         , column [ width fill, padding 10 ]
             [ el [ width fill, Font.size 10 ] (text rad.liga)
-            , row [ width fill]
-                [ column [ height fill, width fill]
+            , row [ width fill ]
+                [ column [ height fill, width fill ]
                     [ el [ Element.alignTop ] (text rad.home)
                     , el [ Element.alignBottom ] (text rad.away)
                     ]
-                , row [ height fill, Font.size 12, width <| (px 100)]
+                , row [ height fill, Font.size 12, width <| px 100 ]
                     [ column [ height fill, width fill ]
                         [ el [] (text (rad.svenskaFolket.hemmalag ++ "%"))
                         , el [] (text (rad.svenskaFolket.kryss ++ "%"))
@@ -394,7 +418,7 @@ matchinfoView index rad =
                     , column [ height fill, width fill ] <|
                         oddsOrNothingView rad.odds
                     ]
-                , column [width <| (px 30), alignRight, height fill ] <|
+                , column [ width <| px 30, alignRight, height fill ] <|
                     predictedScoreView rad.analys
                 ]
             ]
@@ -668,23 +692,164 @@ matchFixtureView match =
         ]
 
 
-overUnderItemPoisson : Match -> Element Msg
-overUnderItemPoisson match =
-    row [ width fill ]
-        [ matchFixtureView match
+overunderGoalPercentageView : String -> Element Msg
+overunderGoalPercentageView probability =
+    el [ height fill, width fill, centerX, Font.center ] <| text (String.slice 0 5 probability ++ "%")
 
-        -- Det här är såklart slappt. Men orkar inte kolla upp korrekt avrundning
-        , el [] <| text (String.slice 0 5 match.analysinfo ++ "%")
+
+recentGameBox : Match -> Element Msg
+recentGameBox match =
+    case match.resultat of
+        Just r ->
+            let
+                backgroundColor =
+                    case r.hemmalag + r.bortalag of
+                        0 ->
+                            rgb255 255 78 78
+
+                        1 ->
+                            rgb255 255 200 200
+
+                        2 ->
+                            rgb255 192 226 206
+
+                        _ ->
+                            rgb255 80 255 150
+            in
+            column []
+                [ el
+                    [ width (px 20)
+                    , height (px 20)
+                    , Border.rounded 5
+                    , Background.color <| backgroundColor
+                    , Font.center
+                    , Font.size 16
+                    ]
+                  <|
+                    Input.button [ centerX, centerY, Font.center ]
+                        { label =
+                            text
+                                (String.fromInt
+                                    (r.hemmalag
+                                        + r.bortalag
+                                    )
+                                )
+                        , onPress = Nothing
+                        }
+                ]
+
+        _ ->
+            Element.none
+
+
+toResultatString : Maybe Score -> String
+toResultatString score =
+    (score
+        |> Maybe.map (\s -> s.hemmalag)
+        |> Maybe.map String.fromInt
+        |> Maybe.withDefault "NA"
+    )
+        ++ " - "
+        ++ (score
+                |> Maybe.map (\s -> s.bortalag)
+                |> Maybe.map String.fromInt
+                |> Maybe.withDefault "NA"
+           )
+
+
+moreinfoRecentGameView : Match -> Element Msg
+moreinfoRecentGameView resultat =
+    row
+        [ width fill, spacing 10, Font.size 12 ]
+        [ el [] <| text (String.slice 2 10 resultat.date)
+        , el [ width (px 110) ] <| text resultat.hemmalag
+        , text " - "
+        , el [ width (px 110) ] <| text resultat.bortalag
+        , el [ Font.alignRight, alignRight ] <| text (toResultatString resultat.resultat)
         ]
 
 
-overUnderItemSenaste : Match -> Element Msg
-overUnderItemSenaste match =
+modalColumn : List (Element msg) -> Element msg
+modalColumn =
+    column
+        [ Background.color <| rgb255 255 255 255
+        , Border.rounded 5
+        , Border.width 2
+        , padding 10
+        , spacing 5
+        ]
+
+
+recentGamesView : OverUnderItem -> OverUnderModalState -> Element Msg
+recentGamesView overUnderItem visaModal =
+    let
+        modalElement =
+            case visaModal of
+                NoneModal ->
+                    Element.none
+
+                HemmalagModal ma ->
+                    if ma == overUnderItem.match then
+                        modalColumn <| List.map moreinfoRecentGameView overUnderItem.senasteHemma
+
+                    else
+                        Element.none
+
+                BortalagModal ma ->
+                    if ma == overUnderItem.match then
+                        modalColumn <| List.map moreinfoRecentGameView overUnderItem.senasteBorta
+
+                    else
+                        Element.none
+    in
+    column [ Element.above modalElement, Element.centerX ]
+        [ row
+            [ spacing 2
+            , onMouseEnter <| OverUnderVisaModal (HemmalagModal overUnderItem.match)
+            , onMouseLeave <| OverUnderVisaModal NoneModal
+            ]
+          <|
+            List.map recentGameBox overUnderItem.senasteHemma
+        , row
+            [ spacing 2
+            , onMouseEnter <| OverUnderVisaModal (BortalagModal overUnderItem.match)
+            , onMouseLeave <| OverUnderVisaModal NoneModal
+            ]
+          <|
+            List.map recentGameBox overUnderItem.senasteBorta
+        ]
+
+
+overUnderItemView : OverUnderItem -> OverUnderModalState -> Element Msg
+overUnderItemView ouAnalys modalstate =
     row [ width fill ]
-        [ matchFixtureView match
+        [ row [ width fill ]
+            [ matchFixtureView ouAnalys.match
+            , recentGamesView ouAnalys modalstate
+            ]
 
         -- Det här är såklart slappt. Men orkar inte kolla upp korrekt avrundning
-        , el [] <| text (String.slice 0 5 match.analysinfo ++ "%")
+        , row [ width fill, height fill, centerY, centerX ] <| List.map overunderGoalPercentageView ouAnalys.poisson
+        ]
+
+
+overUnderHeaderView : Element Msg
+overUnderHeaderView =
+    row [ width fill, height <| px 100, Border.widthEach { bottom = 3, top = 0, left = 0, right = 0 } ]
+        [ row [ width fill, height fill ]
+            [ el [ width fill, Font.size 28 ] <| text "Analys"
+            , el [ width fill, Font.alignRight, padding 20 ] <| text "Senaste fem"
+            ]
+        , column [ height fill, width fill ]
+            [ row [] [ el [ width fill, Font.center, spacing 10, alignTop ] <| text "Över/under mål" ]
+            , row
+                [ height fill, width fill, Font.size 20, Font.bold, Font.center ]
+                [ el [ width fill ] <| text "0.5"
+                , el [ width fill ] <| text "1.5"
+                , el [ width fill ] <| text "2.5"
+                , el [ width fill ] <| text "3.5"
+                ]
+            ]
         ]
 
 
@@ -706,17 +871,8 @@ mainOverUnderView overunder =
     in
     row [ width fill, height fill, padding 50, spacing 10 ]
         [ borderedColumn
-            [ el [ width fill, Font.size 28, height <| px 50, Border.widthEach { bottom = 3, top = 0, left = 0, right = 0 } ] <| text "Poisson"
-            , column [ width fill, paddingXY 0 5, spacing 10 ] <| List.map overUnderItemPoisson overunder.poisson
-            ]
-        , borderedColumn
-            [ el [ width fill, Font.size 28, height <| px 50, Border.widthEach { bottom = 3, top = 0, left = 0, right = 0 } ] <| text "Senaste matcherna"
-            , paragraph [ Font.size 12, height <| px 50 ] [ text "Siffran svarar mot antalet matcher (av 5 per lag) som överskrider 3 mål" ]
-            , if List.length overunder.senasteFem == 0 then
-                el [] <| text "Ingen match svarade mot kriterierna."
-
-              else
-                column [ width fill, paddingXY 0 5, spacing 10 ] <| List.map overUnderItemSenaste overunder.senasteFem
+            [ overUnderHeaderView
+            , column [ width fill, paddingXY 0 5, spacing 10 ] <| List.map (\ou -> overUnderItemView ou overunder.overUnderModal) overunder.data
             ]
         ]
 
@@ -833,16 +989,25 @@ forslagEncoder forslag =
         ]
 
 
+scoreDecoder : D.Decoder Score
+scoreDecoder =
+    D.map2 Score
+        (D.field "hemmalag" D.int)
+        (D.field "bortalag" D.int)
+
+
+resultatScoreDecoder : D.Decoder Score
+resultatScoreDecoder =
+    D.map2 Score
+        (D.index 0 D.int)
+        (D.index 1 D.int)
+
+
 poissonDecoder : D.Decoder Poissonanalys
 poissonDecoder =
     D.map3
         Poissonanalys
-        (D.field "predictedScore"
-            (D.map2 Score
-                (D.field "hemmalag" D.int)
-                (D.field "bortalag" D.int)
-            )
-        )
+        (D.field "predictedScore" scoreDecoder)
         (D.field "outcomePercentage" matchInfoHallareDecoder)
         (D.field "poissonTable" (D.list (D.list D.float)))
 
@@ -894,20 +1059,33 @@ kupongDecoder =
 
 matchDecoder : D.Decoder Match
 matchDecoder =
-    D.map4
+    D.map5
         Match
-        (D.field "match" (D.field "homeTeam" D.string))
-        (D.field "match" (D.field "awayTeam" D.string))
-        (D.field "match" (D.field "liga" D.string))
-        (D.field "analysinfo" D.float |> D.map String.fromFloat)
+        (D.field "homeTeam" D.string)
+        (D.field "awayTeam" D.string)
+        (D.field "liga" D.string)
+        (D.field "fullTime" (D.nullable resultatScoreDecoder))
+        (D.field "date" D.string)
+
+
+overUnderItemDecoder : D.Decoder OverUnderItem
+overUnderItemDecoder =
+    D.map4
+        OverUnderItem
+        (D.field "match" matchDecoder)
+        (D.field "poisson" (D.list (D.float |> D.map String.fromFloat)))
+        (D.field "senasteHemma" (D.list matchDecoder))
+        (D.field "senasteBorta" (D.list matchDecoder))
 
 
 overUnderDecoder : D.Decoder OverUnder
 overUnderDecoder =
     D.map2
         OverUnder
-        (D.field "poisson" (D.list matchDecoder))
-        (D.field "senasteFem" (D.list matchDecoder))
+        (D.field "data"
+            (D.list overUnderItemDecoder)
+        )
+        (D.succeed NoneModal)
 
 
 optionalField : String -> D.Decoder a -> D.Decoder (Maybe a)
