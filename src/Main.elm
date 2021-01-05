@@ -613,7 +613,7 @@ view model =
                             ]
                         , borderedColumn
                             [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Över/under 1.5"
-                            , paragraph [] [ text "Ger förslag på bra spel för marknaden över/under 1.5. Ger låga odds men kan med fördel läggas i en ackumulator." ]
+                            , paragraph [] [ text "Analys över dagens matcher för över/under." ]
                             , Input.button
                                 [ Border.rounded 9
                                 , Border.width 3
