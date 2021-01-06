@@ -157,7 +157,9 @@ init _ =
 
 type Msg
     = HeaderClick
-    | SelectedTipset
+    | SelectedStryktipset
+    | SelectedEuropatipset
+    | SelectedTopptipset
     | SelectedOverUnder
     | GotOppenKupong (Result Http.Error Kupong)
     | GotOverunder (Result Http.Error OverUnder)
@@ -215,6 +217,16 @@ matchInfoHallareBoolIsAllEmpty matchinfo =
     not matchinfo.hemmalag && not matchinfo.kryss && not matchinfo.bortalag
 
 
+selectedForTips : String -> ( Model, Cmd Msg )
+selectedForTips tipsurl =
+    ( LoadingTips Dict.empty
+    , Http.get
+        { url = tipsurl
+        , expect = Http.expectJson GotOppenKupong kupongDecoder
+        }
+    )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -229,13 +241,14 @@ update msg model =
         HeaderClick ->
             ( Selection, Cmd.none )
 
-        SelectedTipset ->
-            ( LoadingTips Dict.empty
-            , Http.get
-                { url = "http://localhost:5000/hamtaKupong"
-                , expect = Http.expectJson GotOppenKupong kupongDecoder
-                }
-            )
+        SelectedStryktipset ->
+            selectedForTips "http://localhost:5000/hamtaKupong/stryktipset"
+
+        SelectedEuropatipset ->
+            selectedForTips "http://localhost:5000/hamtaKupong/europatipset"
+
+        SelectedTopptipset ->
+            selectedForTips "http://localhost:5000/hamtaKupong/topptipset"
 
         SelectedOverUnder ->
             ( LoadingOverunder
@@ -594,26 +607,32 @@ view model =
                         , Border.width 2
                         , Border.rounded 6
                         ]
+
+                tipsbutton =
+                    Input.button
+                        [ Border.rounded 9
+                        , Border.width 3
+                        , centerX
+                        , alignBottom
+                        , padding 25
+                        ]
             in
             layout [] <|
                 column [ height fill, width fill ]
                     [ header
-                    , row [ width fill, height (px 500), padding 100, spacing 10 ]
+                    , row [ height fill, width fill, height (px 500), padding 100, spacing 10 ]
                         [ borderedColumn
                             [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Tipset"
-                            , paragraph [] [ text "Stryktipset/Europatipset samt Topptipset." ]
-                            , Input.button
-                                [ Border.rounded 9
-                                , Border.width 3
-                                , centerX
-                                , alignBottom
-                                , padding 25
+                            , paragraph [ width fill, Font.center ] [ text "Stryktipset/Europatipset samt Topptipset." ]
+                            , row [ width fill, height fill, spacing 20, padding 10 ]
+                                [ tipsbutton { label = text "Stryktipset", onPress = Just SelectedStryktipset }
+                                , tipsbutton { label = text "Europatipset", onPress = Just SelectedEuropatipset }
+                                , tipsbutton { label = text "Topptipset", onPress = Just SelectedTopptipset }
                                 ]
-                                { label = text "Mot jackpotten", onPress = Just SelectedTipset }
                             ]
                         , borderedColumn
                             [ el [ centerX, Font.size 28, height <| px 50 ] <| text "Över/under 1.5"
-                            , paragraph [] [ text "Analys över dagens matcher för över/under." ]
+                            , paragraph [ width fill, Font.center ] [ text "Analys över dagens matcher för över/under." ]
                             , Input.button
                                 [ Border.rounded 9
                                 , Border.width 3
